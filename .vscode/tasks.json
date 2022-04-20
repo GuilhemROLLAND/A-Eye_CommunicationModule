@@ -2,9 +2,13 @@
     "tasks": [
         {
             "type": "cppbuild",
-            "label": "C/C++: gcc.exe générer le fichier actif",
-            "command": "C:\\msys64\\mingw64\\bin\\gcc.exe",
+            "label": "C/C++: gcc-5 générer le fichier actif",
+            "command": "/usr/bin/gcc-5",
             "args": [
+                "circular_buffer.c",
+                "interpreteur.c",
+                "encodageTM.c",
+                "decodageTC.c",
                 "-fdiagnostics-color=always",
                 "-g",
                 "${file}",
@@ -12,7 +16,32 @@
                 "${fileDirname}\\${fileBasenameNoExtension}.exe"
             ],
             "options": {
-                "cwd": "C:\\msys64\\mingw64\\bin"
+                "cwd": "${fileDirname}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": "build",
+            "detail": "Tâche générée par le débogueur."
+        },
+        {
+            "type": "cppbuild",
+            "label": "C/C++: gcc générer le fichier actif",
+            "command": "/usr/bin/gcc",
+            "args": [
+                "circular_buffer.c",
+                "interpreteur.c",
+                "encodageTM.c",
+                "decodageTC.c",
+                "-fdiagnostics-color=always",
+                "-g",
+                "${file}",
+                "-o",
+                "${fileDirname}/${fileBasenameNoExtension}",
+                "-lm"
+            ],
+            "options": {
+                "cwd": "${fileDirname}"
             },
             "problemMatcher": [
                 "$gcc"
