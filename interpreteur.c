@@ -50,7 +50,7 @@ char *interpreteur(mainStruct *main_s)
             {
                 // TO DO :
                 // déclencher une capture manuelle
-                FILE *imageFile = fopen("temp.bmp", "wb");
+                FILE *imageFile = fopen("temp.bmp", "rb");
                 char *img;
                 if ((img = malloc(IMG_LENGTH * sizeof(char))) == NULL)
                 {
@@ -61,6 +61,7 @@ char *interpreteur(mainStruct *main_s)
                 main_s->img_s->addr = img;
                 main_s->img_s->length = IMG_LENGTH;
                 main_s->img_s->img_f = true;
+                fclose(imageFile);
                 bufferMsg = "Capture";
                 string->length = strlen(bufferMsg);
                 if ((string->string = malloc(sizeof(char) * string->length)) == NULL)
