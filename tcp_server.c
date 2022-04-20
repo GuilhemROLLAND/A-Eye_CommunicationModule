@@ -143,12 +143,13 @@ int main()
                 if (main_s->buf_f_struct->new_data_f == true)
                 {
                     // Send some data
-                    printf("Code op : %d\n", bufferMsg[0]);
-                    printf("Length : %d\n", bufferMsg[4]);
+                    printf("Will be send : \n");
+                    printf("Code op : %d  ||  ", bufferMsg[0]);
+                    printf("Length : %d  ||  ", bufferMsg[4]);
                     printf("Message : ");
                     for (int i=5; i < bufferMsg[4] + 5; i++)
                         printf("%c", bufferMsg[i]);
-                    printf("\n");
+                    printf("\n\n");
                     if (send(sock, bufferMsg, bufferMsg[4] + 5, 0) < 0)
                     {
                         printf("Send failed\n");
@@ -160,6 +161,7 @@ int main()
                 {
                     char *imgTM = imgEncodedTM(main_s->img_s->length);
                     // Send some data
+                    printf("Sending image from process IA ... \n");
                     if (send(sock, imgTM, main_s->img_s->length + 5, 0) < 0)
                     {
                         printf("Send failed\n");
@@ -172,6 +174,7 @@ int main()
                 {
                     char *imgTM = captureManuelle(main_s->img_s->length);
                     // Send some data
+                    printf("Sending image from manual capture ...\n");
                     if (send(sock, imgTM, main_s->img_s->length + 5, 0) < 0)
                     {
                         printf("Send failed\n");

@@ -83,6 +83,13 @@
      */
     char* imgEncodedTM(int length);
 
+    /**
+     * @brief get data from file and return the data in a char buffer
+     * 
+     * @param buffer out buffer
+     * @param file filename 
+     * @return int 
+     */
     int imageInTM(char* buffer, char* file);
 
     /**
@@ -93,6 +100,14 @@
      */
     char *captureManuelle(int length);
 
+    /**
+     * @brief add corresponding codeop to the msg 
+     * 
+     * @param inputString the input message
+     * @param codeOp corresponding codeOp
+     * @param tm output string containing tm
+     * @return char* tm : the tm
+     */
     char* codeOpConcat(STRINGLENGTH *inputString, char codeOp, char *tm);
 
 #endif
