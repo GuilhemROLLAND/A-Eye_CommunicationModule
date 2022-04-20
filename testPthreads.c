@@ -19,6 +19,7 @@ int main()
     pthread_t thr2;
 
     pthread_create(&thr1, NULL, &thread1, NULL);
+    pthread_create(&thr2, NULL, &thread2, NULL);
     printf("This line may be printed"
            " before thread terminates\n");
     
@@ -33,4 +34,5 @@ int main()
   
     pthread_exit(NULL);
     return 1;
+    
 }

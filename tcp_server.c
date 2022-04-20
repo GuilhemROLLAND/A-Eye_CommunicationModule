@@ -15,6 +15,101 @@ short SocketCreate(void)
     return hSocket;
 }
 
+void *thread_rcv(void *arg)
+{
+    socket_thr_s *soc = arg;
+    char client_message[200] = {0};
+    memset(client_message, 0, sizeof(client_message));
+    while (1)
+    {
+        // Receive a reply from the client
+        if (recv(soc->sock, client_message, 200, 0) < 0)
+        {
+            printf("recv failed\n");
+        }
+        else
+        {
+            printf("Client reply : %s\n", client_message);
+
+            // if we receieve stop message, we free all buffer and close the connection
+            if (strstr(client_message, "STOP") != 0)
+            {
+                // freeing memory space
+                circular_buf_free(main_s->buf_f_struct->cbuf);
+                free(main_s->cmd_struct);
+                free(main_s->buf_f_struct);
+                free(main_s->weight_struct);
+                free(main_s->chg_mode_struct);
+                free(main_s);
+                // send end of connection and close socket
+                send(soc->sock, client_message, strlen(client_message), 0);
+                close(soc->socket_desc);
+                return NULL;
+            }
+            else
+            {
+                // if no code op, no need to call interpreteur
+                if (decodeTC(main_s, client_message) == 0)
+                    printf("Not a TC\n");
+            }
+        }
+    }
+}
+
+void *thread_send(void *arg)
+{
+    socket_thr_s *soc = arg;
+    char *bufferMsg = malloc(100 * sizeof(char));
+    while (1)
+    {
+        bufferMsg = interpreteur(main_s);
+        // if new data : send new data
+        if (main_s->buf_f_struct->new_data_f == true)
+        {
+            // Send some data
+            printf("Will be send : \n");
+            printf("Code op : %d  ||  ", bufferMsg[0]);
+            printf("Length : %d  ||  ", bufferMsg[4]);
+            printf("Message : ");
+            for (int i = 5; i < bufferMsg[4] + 5; i++)
+                printf("%c", bufferMsg[i]);
+            printf("\n\n");
+            if (send(soc->sock, bufferMsg, bufferMsg[4] + 5, 0) < 0)
+            {
+                printf("Send failed\n");
+                return NULL;
+            }
+        }
+        // if new IMG to send : send the TM
+        else if (main_s->img_s->img_f == true)
+        {
+            char *imgTM = imgEncodedTM(main_s->img_s->length);
+            // Send some data
+            printf("Sending image from process IA ... \n");
+            if (send(soc->sock, imgTM, main_s->img_s->length + 5, 0) < 0)
+            {
+                printf("Send failed\n");
+                return NULL;
+            }
+            main_s->img_s->img_f = false;
+            free(imgTM);
+        }
+        else if (main_s->img_s->capture_f == true)
+        {
+            char *imgTM = captureManuelle(main_s->img_s->length);
+            // Send some data
+            printf("Sending image from manual capture ...\n");
+            if (send(soc->sock, imgTM, main_s->img_s->length + 5, 0) < 0)
+            {
+                printf("Send failed\n");
+                return NULL;
+            }
+            main_s->img_s->capture_f = false;
+            free(imgTM);
+        }
+    }
+}
+
 /**
  * @brief Bind an existing socket to a port and accepting any incoming addr
  *
@@ -67,13 +162,16 @@ int main()
         printf("erreur allocation mémoire\n");
         return -1;
     }
-    char *bufferMsg = malloc(100 * sizeof(char));
     int socket_desc, sock, clientLen, read_size;
     struct sockaddr_in server, client;
-    char client_message[200] = {0};
-    char message[100] = {0};
-    main_s->buf_f_struct->cbuf = circular_buf_init(100);
+    pthread_t thr_rcv_id, thr_send_id;
     // Create socket
+    socket_thr_s *soc;
+    if ((soc = malloc(sizeof(socket_thr_s))) == NULL)
+    {
+        printf("erreur allocation memoire\n");
+        return -1;
+    }
     socket_desc = SocketCreate();
     if (socket_desc == -1)
     {
@@ -101,91 +199,12 @@ int main()
         return -1;
     }
     printf("Connection accepted\n");
-    memset(message, '\0', sizeof message);
-    while (1)
-    {
-        memset(client_message, 0, sizeof(client_message));
-        // Receive a reply from the client
-        if (recv(sock, client_message, 200, 0) < 0)
-        {
-            printf("recv failed\n");
-        }
-        else
-        {
-            printf("Client reply : %s\n", client_message);
-
-            // if we receieve stop message, we free all buffer and close the connection
-            if (strstr(client_message,"STOP") != 0)
-            {
-                // freeing memory space
-                circular_buf_free(main_s->buf_f_struct->cbuf);
-                free(bufferMsg);
-                free(main_s->cmd_struct);
-                free(main_s->buf_f_struct);
-                free(main_s->weight_struct);
-                free(main_s->chg_mode_struct);
-                free(main_s);
-                // send end of connection and close socket
-                send(sock, client_message, strlen(client_message), 0);
-                close(socket_desc);
-                break;
-            }
-
-            // if we receive another type of msg, we try to decode
-            else
-            {
-                //if no code op, no need to call interpreteur
-                if (decodeTC(main_s, client_message) == 0)
-                    printf("Not a TC\n");
-                else
-                    bufferMsg = interpreteur(main_s);
-                // if new data : send new data
-                if (main_s->buf_f_struct->new_data_f == true)
-                {
-                    // Send some data
-                    printf("Will be send : \n");
-                    printf("Code op : %d  ||  ", bufferMsg[0]);
-                    printf("Length : %d  ||  ", bufferMsg[4]);
-                    printf("Message : ");
-                    for (int i=5; i < bufferMsg[4] + 5; i++)
-                        printf("%c", bufferMsg[i]);
-                    printf("\n\n");
-                    if (send(sock, bufferMsg, bufferMsg[4] + 5, 0) < 0)
-                    {
-                        printf("Send failed\n");
-                        return -1;
-                    }
-                }
-                // if new IMG to send : send the TM
-                else if (main_s->img_s->img_f == true)
-                {
-                    char *imgTM = imgEncodedTM(main_s->img_s->length);
-                    // Send some data
-                    printf("Sending image from process IA ... \n");
-                    if (send(sock, imgTM, main_s->img_s->length + 5, 0) < 0)
-                    {
-                        printf("Send failed\n");
-                        return -1;
-                    }
-                    main_s->img_s->img_f = false;
-                    free(imgTM);
-                }
-                else if (main_s->img_s->capture_f == true)
-                {
-                    char *imgTM = captureManuelle(main_s->img_s->length);
-                    // Send some data
-                    printf("Sending image from manual capture ...\n");
-                    if (send(sock, imgTM, main_s->img_s->length + 5, 0) < 0)
-                    {
-                        printf("Send failed\n");
-                        return -1;
-                    }
-                    main_s->img_s->capture_f = false;
-                    free(imgTM);
-                }
-            }
-        }
-    }
-    printf("end of while\n");
+    soc->sock = sock;
+    soc->socket_desc = socket_desc;
+    pthread_create(&thr_rcv_id, NULL, &thread_rcv, soc);
+    pthread_create(&thr_send_id, NULL, &thread_send, soc);
+    pthread_join(thr_rcv_id, NULL);
+    pthread_join(thr_send_id, NULL);
+    printf("end of main\n");
     return 0;
 }

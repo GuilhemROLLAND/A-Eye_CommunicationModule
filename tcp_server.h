@@ -12,6 +12,12 @@
 #ifndef _TCPSERVER_H
 #define _TCPSERVER_H
 
+typedef struct socket_thr_s 
+{
+    int sock;
+    int socket_desc;
+} socket_thr_s;
+
 /**
  * @brief Create a tcp socket 
  * 
