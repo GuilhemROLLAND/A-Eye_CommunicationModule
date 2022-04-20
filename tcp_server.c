@@ -158,7 +158,7 @@ int main()
                 // if new IMG to send : send the TM
                 else if (main_s->img_s->img_f == true)
                 {
-                    char *imgTM = imgEncodedTM(main_s->img_s->addr, main_s->img_s->length);
+                    char *imgTM = imgEncodedTM(main_s->img_s->length);
                     // Send some data
                     if (send(sock, imgTM, main_s->img_s->length + 5, 0) < 0)
                     {
@@ -166,6 +166,18 @@ int main()
                         return -1;
                     }
                     main_s->img_s->img_f = false;
+                    free(imgTM);
+                }
+                else if (main_s->img_s->capture_f == true)
+                {
+                    char *imgTM = captureManuelle(main_s->img_s->length);
+                    // Send some data
+                    if (send(sock, imgTM, main_s->img_s->length + 5, 0) < 0)
+                    {
+                        printf("Send failed\n");
+                        return -1;
+                    }
+                    main_s->img_s->capture_f = false;
                     free(imgTM);
                 }
             }

@@ -81,9 +81,17 @@
      * @param length length of the img
      * @return TELEMESURE* struct containing the starting addr of the data, codeOp and length
      */
-    char* imgEncodedTM(char* addr, int length);
+    char* imgEncodedTM(int length);
 
     int imageInTM(char* buffer, char* file);
+
+    /**
+     * @brief convert a manual captured img to a TM
+     * 
+     * @param length length of the img
+     * @return char* char* ptr to the TM
+     */
+    char *captureManuelle(int length);
 
     char* codeOpConcat(STRINGLENGTH *inputString, char codeOp, char *tm);
 

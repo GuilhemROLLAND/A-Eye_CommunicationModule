@@ -68,9 +68,8 @@ char *stringEncodedTM(STRINGLENGTH *inputString, unsigned char typeOfAck)
     return tm;
 }
 
-char *imgEncodedTM(char *addr, int length)
+char *imgEncodedTM(int length)
 {
-    // length = 1228938;
     char *imgTM = malloc((length * sizeof(unsigned char)) + 6 * sizeof(char));
     if (imgTM == NULL)
     {
@@ -82,7 +81,24 @@ char *imgEncodedTM(char *addr, int length)
     imgTM[2] = (length >> 16) & 0xFF;
     imgTM[3] = (length >> 8) & 0xFF;
     imgTM[4] = length & 0xFF;
-    imageInTM(&imgTM[5], "pict.bmp");
+    imageInTM(&imgTM[5], "temp.bmp");
+    return imgTM;
+}
+
+char *captureManuelle(int length)
+{
+    char *imgTM = malloc((length * sizeof(unsigned char)) + 6 * sizeof(char));
+    if (imgTM == NULL)
+    {
+        printf("erreur allocation mémoire \n");
+        return NULL;
+    }
+    imgTM[0] = (char)0x70;
+    imgTM[1] = (length >> 24) & 0xFF;
+    imgTM[2] = (length >> 16) & 0xFF;
+    imgTM[3] = (length >> 8) & 0xFF;
+    imgTM[4] = length & 0xFF;
+    imageInTM(&imgTM[5], "temp.bmp");
     return imgTM;
 }
 
