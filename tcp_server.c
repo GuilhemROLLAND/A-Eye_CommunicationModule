@@ -134,7 +134,7 @@ void *thread_pred(void *arg)
             printf("erreur de lecture du pipe\n");
             return NULL;
         }
-        if (pred == 1)
+        if (pred == 0)
         {
             main_s->img_s->img_f = true;
         }

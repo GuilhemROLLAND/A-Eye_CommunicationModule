@@ -11,6 +11,7 @@
                 "encodageTM.c",
                 "-fdiagnostics-color=always",
                 "-g",
+                "-lpthread",
                 "${file}",
                 "-o",
                 "${fileDirname}/${fileBasenameNoExtension}"
