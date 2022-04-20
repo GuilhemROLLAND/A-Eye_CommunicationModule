@@ -1,16 +1,17 @@
 #include "interpreteur.h"
 #include "encodageTM.h"
 
-char *capture() 
+#define IMG_LENGTH 921656
+
+char *capture()
 {
-    FILE* imageFile = fopen("temp.bmp", "wb");
-    char* img;
-    if ((img = malloc(921654)) == NULL)
+    FILE *imageFile = fopen("temp.bmp", "wb");
+    char *img;
+    if ((img = malloc(IMG_LENGTH * sizeof(char))) == NULL)
     {
         printf("erreur allocation memoire\n");
         return NULL;
     }
-    img = imgEncodedTM(img, 921654); 
     return img;
 }
 
@@ -35,7 +36,7 @@ char *interpreteur(mainStruct *main_s)
         switch (main_s->chg_mode_struct->mode)
         {
         case 0:
-            //system("cd /home/root/A-Eye-Visor/\n./processIA")
+            // system("cd /home/root/A-Eye-Visor/\n./processIA")
             bufferMsg = "Process IA running";
             string->length = strlen(bufferMsg);
             if ((string->string = malloc(sizeof(char) * string->length)) == NULL)
@@ -49,7 +50,17 @@ char *interpreteur(mainStruct *main_s)
             {
                 // TO DO :
                 // déclencher une capture manuelle
-                
+                FILE *imageFile = fopen("temp.bmp", "wb");
+                char *img;
+                if ((img = malloc(IMG_LENGTH * sizeof(char))) == NULL)
+                {
+                    printf("erreur allocation memoire\n");
+                    return NULL;
+                }
+                fread(img, IMG_LENGTH, 1, imageFile);
+                main_s->img_s->addr = img;
+                main_s->img_s->length = IMG_LENGTH;
+                main_s->img_s->img_f = true;
                 bufferMsg = "Capture";
                 string->length = strlen(bufferMsg);
                 if ((string->string = malloc(sizeof(char) * string->length)) == NULL)

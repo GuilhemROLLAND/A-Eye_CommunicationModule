@@ -32,5 +32,4 @@ int main()
     //         printf("%c", data[i]);
     //     printf("\n");
     // }
-    system("cd /home/root/CommunicationModule/\npwd\nls\n./tcp_server");
 }

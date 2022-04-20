@@ -81,7 +81,7 @@
      * @param length length of the img
      * @return TELEMESURE* struct containing the starting addr of the data, codeOp and length
      */
-    char* imgEncodedTM(int* addr, int length);
+    char* imgEncodedTM(char* addr, int length);
 
     int imageInTM(char* buffer, char* file);
 

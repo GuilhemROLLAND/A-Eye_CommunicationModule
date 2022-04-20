@@ -68,7 +68,7 @@ char *stringEncodedTM(STRINGLENGTH *inputString, unsigned char typeOfAck)
     return tm;
 }
 
-char *imgEncodedTM(int *addr, int length)
+char *imgEncodedTM(char *addr, int length)
 {
     // length = 1228938;
     char *imgTM = malloc((length * sizeof(unsigned char)) + 6 * sizeof(char));
