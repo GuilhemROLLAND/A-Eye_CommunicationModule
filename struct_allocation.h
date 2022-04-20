@@ -34,6 +34,7 @@ typedef struct buf_f
 typedef struct img
 {
     bool img_f;
+    bool capture_f;
     char *addr;
     int length;
 } img;
