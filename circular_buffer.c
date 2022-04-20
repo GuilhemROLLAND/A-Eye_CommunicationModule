@@ -7,10 +7,13 @@ void circular_buf_reset(cbuf_handle_t me)
     me->full = false;
 }
 
-cbuf_handle_t circular_buf_init(char* buffer, int size)
+cbuf_handle_t circular_buf_init(int size)
 {
 	cbuf_handle_t cbuf = malloc(sizeof(circular_buf_t));
-	cbuf->buffer = buffer;
+	for (int i = 0; i < 10; i++)
+	{
+		cbuf->buffer[i] = malloc(size * sizeof(char));
+	}
 	cbuf->max = size;
 	circular_buf_reset(cbuf);
 	return cbuf;
@@ -80,20 +83,20 @@ static void retreat_pointer(cbuf_handle_t me)
 
 void circular_buf_put(cbuf_handle_t me, char *data)
 {
-    me->buffer[me->head] = *data;
+    me->buffer[me->head] = data;
     advance_pointer(me);
 }
 
-int circular_buf_get(cbuf_handle_t me, char *data)
+char* circular_buf_get(cbuf_handle_t me, char *data)
 {
     int r = -1;
     if(!circular_buf_empty(me))
     {
-        *data = me->buffer[me->tail];
+        data = me->buffer[me->tail];
         retreat_pointer(me);
 
         r = 0;
     }
-    return r;
+    return data;
 }
 

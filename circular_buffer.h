@@ -8,7 +8,7 @@
     // Opaque circular buffer structure
     typedef struct circular_buf_t
     {
-        char *buffer;
+        char *buffer[10];
         int head;
         int tail;
         int max; // of the buffer
@@ -26,7 +26,7 @@
      * @param size of the cbuf to create
      * @return cbuf_handle_t buffer handle
      */
-    cbuf_handle_t circular_buf_init(char *buffer, int size);
+    cbuf_handle_t circular_buf_init(int size);
 
     /**
      * @brief Free a circular buffer structure.
@@ -58,7 +58,7 @@
      * @param data output buffer to store data
      * @return int Returns 0 on success, -1 if the buffer is empty
      */
-    int circular_buf_get(cbuf_handle_t me, char *data);
+    char* circular_buf_get(cbuf_handle_t me, char *data);
 
     /**
      * @brief Returns true if the buffer is empty
