@@ -49,7 +49,7 @@
 
     typedef struct
     {
-        unsigned char length;
+        char length;
         char* string; 
     } STRINGLENGTH;
     #endif

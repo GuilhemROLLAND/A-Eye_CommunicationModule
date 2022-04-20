@@ -115,7 +115,7 @@ int main()
             printf("Client reply : %s\n", client_message);
 
             // if we receieve stop message, we free all buffer and close the connection
-            if (client_message == "STOP")
+            if (strstr(client_message,"STOP") != 0)
             {
                 // freeing memory space
                 circular_buf_free(main_s->buf_f_struct->cbuf);
@@ -139,7 +139,6 @@ int main()
                     printf("Not a TC\n");
                 else
                     interpreteur(main_s);
-
                 // if new data : send new data
                 if (main_s->buf_f_struct->new_data_f == true)
                 {

@@ -19,42 +19,48 @@ STRINGLENGTH *ackTxtFileReading(char *filePath)
     return str;
 }
 
-char *stringEncodedTM(STRINGLENGTH *inputString, unsigned char typeOfAck)
+void codeOpConcat(STRINGLENGTH *inputString, char codeOp)
 {
-    char temp;
     char *dest;
     dest = malloc(9 * sizeof(char));
     if (dest == NULL)
         printf("erreur allocation mémoire \n");
+    inputString->string[0] = codeOp;
+    inputString->string[1] = 0;
+    inputString->string[2] = 0;
+    inputString->string[3] = 0;
+    inputString->string[4] = inputString->length;
+    
+    return;
+}
+
+char *stringEncodedTM(STRINGLENGTH *inputString, unsigned char typeOfAck)
+{
+    char codeOp;
     inputString->string = malloc(inputString->length * sizeof(char));
     if (inputString->string == NULL)
         printf("erreur allocation mémoire \n");
     switch (typeOfAck)
     {
     case 0: // chg_mode_ack
-        temp = 0x10;
-        sprintf(dest, "%d", temp);
-        strcpy(inputString->string, dest);
+        codeOp = 0x10;
+        codeOpConcat(inputString, codeOp);
         break;
     case 1: // takePct ack
-        temp = 0x20;
-        sprintf(dest, "%d", temp);
-        strcpy(inputString->string, dest);
+        codeOp = 0x20;
+        codeOpConcat(inputString, codeOp);
         break;
     case 2: // startStopFlag
-        temp = 0x30;
-        sprintf(dest, "%d", temp);
-        strcpy(inputString->string, dest);
+        codeOp = 0x30;
+        codeOpConcat(inputString, codeOp);
         break;
     case 3: // loadWeights
-        temp = 0x40;
-        sprintf(dest, "%d", temp);
-        strcpy(inputString->string, dest);
+        codeOp = 0x40;
+        codeOpConcat(inputString, codeOp);
         break;
     case 4: // arbitrary string
-        temp = 0x60;
-        sprintf(dest, "%d", temp);
-        strcpy(inputString->string, dest);
+        codeOp = 0x60;
+        codeOpConcat(inputString, codeOp);
         break;
     }
     return inputString->string;
