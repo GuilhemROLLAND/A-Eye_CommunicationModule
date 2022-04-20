@@ -1,1 +1,3 @@
 server.o
+.gitignore
+tcp_server_original
