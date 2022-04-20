@@ -1,5 +1,4 @@
 import pipeClient
-import StockagePC.stockage as store
 
 def decodeTM(str):
     code = str[0]
@@ -14,7 +13,6 @@ def decodeTM(str):
         file.write(str)
         file.close()
         pipeClient.writeInPipe("Get New Image")
-        store.placeImage("temp.bmp")
     else:
         # Other
         pipeClient.writeInPipe("OpCode not implemented in decodageTM")
