@@ -6,6 +6,10 @@
             "command": "/usr/bin/gcc-5",
             "args": [
                 "-fdiagnostics-color=always",
+                "circular_buffer.c",
+                "interpreteur.c",
+                "encodageTM.c",
+                "decodageTC.c",
                 "-g",
                 "${file}",
                 "-o",
