@@ -7,10 +7,9 @@
      * @brief process the TC and activate the corresponding process, write ack to buffer
      * 
      * @param main_s main structure 
-     * @param bufferMsg buffer to store ack
      * @return int -1 if memory allocation failed
      */
-    int interpreteur(mainStruct *main_s, char *bufferMsg);
+    int interpreteur(mainStruct *main_s);
 
 
 #endif

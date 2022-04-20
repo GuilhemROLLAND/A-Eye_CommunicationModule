@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "encodagetm.h": "c",
+        "stdio.h": "c",
+        "circular_buffer.h": "c",
+        "stdlib.h": "c"
+    }
+}

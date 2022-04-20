@@ -21,52 +21,43 @@ STRINGLENGTH *ackTxtFileReading(char *filePath)
 
 char *stringEncodedTM(STRINGLENGTH *inputString, unsigned char typeOfAck)
 {
-    char *string;
-    char *temp;
+    char temp;
     char *dest;
-    string = malloc(inputString->length * sizeof(char));
-    if (string == NULL)
-        printf("erreur allocation mémoire \n");
-    temp = malloc(4 * sizeof(char));
-    if (temp == NULL)
-        printf("erreur allocation mémoire \n");
-    dest = malloc((strlen(temp) + strlen(string)) * sizeof(char));
+    dest = malloc(9 * sizeof(char));
     if (dest == NULL)
+        printf("erreur allocation mémoire \n");
+    inputString->string = malloc(inputString->length * sizeof(char));
+    if (inputString->string == NULL)
         printf("erreur allocation mémoire \n");
     switch (typeOfAck)
     {
     case 0: // chg_mode_ack
-        temp = "0x10";
-        strcpy(dest, temp);
-        strcat(dest, " ");
-        strcat(dest, inputString->string);
+        temp = 0x10;
+        sprintf(dest, "%d", temp);
+        strcpy(inputString->string, dest);
         break;
     case 1: // takePct ack
-        temp = "0x20";
-        strcpy(dest, temp);
-        strcat(dest, " ");
-        strcat(dest, inputString->string);
+        temp = 0x20;
+        sprintf(dest, "%d", temp);
+        strcpy(inputString->string, dest);
         break;
     case 2: // startStopFlag
-        temp = "0x30";
-        strcpy(dest, temp);
-        strcat(dest, " ");
-        strcat(dest, inputString->string);
+        temp = 0x30;
+        sprintf(dest, "%d", temp);
+        strcpy(inputString->string, dest);
         break;
     case 3: // loadWeights
-        temp = "0x40";
-        strcpy(dest, temp);
-        strcat(dest, " ");
-        strcat(dest, inputString->string);
+        temp = 0x40;
+        sprintf(dest, "%d", temp);
+        strcpy(inputString->string, dest);
         break;
     case 4: // arbitrary string
-        temp = "0x60";
-        strcpy(dest, temp);
-        strcat(dest, " ");
-        strcat(dest, inputString->string);
+        temp = 0x60;
+        sprintf(dest, "%d", temp);
+        strcpy(inputString->string, dest);
         break;
     }
-    return dest;
+    return inputString->string;
 }
 
 char *imgEncodedTM(int *addr, int length)

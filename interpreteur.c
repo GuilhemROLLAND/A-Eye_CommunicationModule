@@ -1,13 +1,20 @@
 #include "interpreteur.h"
 #include "encodageTM.h"
 
-int interpreteur(mainStruct *main_s, char *bufferMsg)
+int interpreteur(mainStruct *main_s)
 {
     STRINGLENGTH *string;
-    
-    if ((string = malloc(sizeof(STRINGLENGTH))) == NULL);
+    char *bufferMsg;
+    if ((bufferMsg = malloc(100*sizeof(char))) == NULL)
+    {
         printf("erreur allocation mémoire \n");
         return -1;
+    }
+    if ((string = malloc(sizeof(STRINGLENGTH))) == NULL)
+    {
+        printf("erreur allocation mémoire \n");
+        return -1;
+    }  
     if (main_s->cmd_struct->change_mode == true)
     {
         switch (main_s->chg_mode_struct->mode)
@@ -27,7 +34,7 @@ int interpreteur(mainStruct *main_s, char *bufferMsg)
             {
                 // TO DO :
                 // déclencher une capture manuelle
-                bufferMsg = "Capture";
+                bufferMsg = "Capture"; 
                 string->length = strlen(bufferMsg);
                 string->string = bufferMsg;
                 bufferMsg  = stringEncodedTM(string, 4);
@@ -59,12 +66,6 @@ int interpreteur(mainStruct *main_s, char *bufferMsg)
     {
         // TO DO :
         // Sequence d'init
-        bufferMsg = "Starting ...";
-        string->length = strlen(bufferMsg);
-        string->string = bufferMsg;
-        bufferMsg = stringEncodedTM(string, 4);
-        circular_buf_put(main_s->buf_f_struct->cbuf, bufferMsg);
-        main_s->buf_f_struct->new_data_f = true;
     }
     else
     {

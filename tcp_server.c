@@ -138,7 +138,7 @@ int main()
                 if (decodeTC(main_s, client_message) == 0)
                     printf("Not a TC\n");
                 else
-                    interpreteur(main_s, bufferMsg);
+                    interpreteur(main_s);
 
                 // if new data : send new data
                 if (main_s->buf_f_struct->new_data_f == true)
@@ -162,11 +162,12 @@ int main()
                 {
                     char *imgTM = imgEncodedTM(main_s->img_s->addr, main_s->img_s->length);
                     // Send some data
-                    if (send(sock, imgTM, main_s->img_s->length + 6, 0) < 0)
+                    if (send(sock, imgTM, main_s->img_s->length + 5, 0) < 0)
                     {
                         printf("Send failed\n");
                         return -1;
                     }
+                    main_s->img_s->img_f = false;
                     free(imgTM);
                 }
             }
