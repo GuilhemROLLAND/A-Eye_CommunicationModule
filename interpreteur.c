@@ -1,6 +1,19 @@
 #include "interpreteur.h"
 #include "encodageTM.h"
 
+char *capture() 
+{
+    FILE* imageFile = fopen("temp.bmp", "wb");
+    char* img;
+    if ((img = malloc(921654)) == NULL)
+    {
+        printf("erreur allocation memoire\n");
+        return NULL;
+    }
+    img = imgEncodedTM(img, 921654); 
+    return img;
+}
+
 char *interpreteur(mainStruct *main_s)
 {
     STRINGLENGTH *string;
@@ -36,6 +49,7 @@ char *interpreteur(mainStruct *main_s)
             {
                 // TO DO :
                 // déclencher une capture manuelle
+                
                 bufferMsg = "Capture";
                 string->length = strlen(bufferMsg);
                 if ((string->string = malloc(sizeof(char) * string->length)) == NULL)

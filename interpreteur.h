@@ -11,5 +11,5 @@
      */
     char* interpreteur(mainStruct *main_s);
 
-
+    char* capture();
 #endif
