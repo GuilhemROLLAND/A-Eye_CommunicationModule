@@ -1,5 +1,7 @@
 #include "tcp_server.h"
 
+
+#define IMG_LENGTH 921656
 struct mainStruct *main_s;
 
 /**
@@ -18,10 +20,11 @@ short SocketCreate(void)
 void *thread_rcv(void *arg)
 {
     socket_thr_s *soc = arg;
+    main_s->ack = malloc(100 * sizeof(char));
     char client_message[200] = {0};
-    memset(client_message, 0, sizeof(client_message));
     while (1)
     {
+        memset(client_message, 0, sizeof(client_message));
         // Receive a reply from the client
         if (recv(soc->sock, client_message, 200, 0) < 0)
         {
@@ -51,6 +54,7 @@ void *thread_rcv(void *arg)
                 // if no code op, no need to call interpreteur
                 if (decodeTC(main_s, client_message) == 0)
                     printf("Not a TC\n");
+                main_s->ack = interpreteur(main_s);
             }
         }
     }
@@ -58,31 +62,32 @@ void *thread_rcv(void *arg)
 
 void *thread_send(void *arg)
 {
+    printf("Pipe opened\n");
     socket_thr_s *soc = arg;
-    char *bufferMsg = malloc(100 * sizeof(char));
     while (1)
     {
-        bufferMsg = interpreteur(main_s);
         // if new data : send new data
         if (main_s->buf_f_struct->new_data_f == true)
         {
             // Send some data
             printf("Will be send : \n");
-            printf("Code op : %d  ||  ", bufferMsg[0]);
-            printf("Length : %d  ||  ", bufferMsg[4]);
+            printf("Code op : %d  ||  ", main_s->ack[0]);
+            printf("Length : %d  ||  ", main_s->ack[4]);
             printf("Message : ");
-            for (int i = 5; i < bufferMsg[4] + 5; i++)
-                printf("%c", bufferMsg[i]);
+            for (int i = 5; i < main_s->ack[4] + 5; i++)
+                printf("%c", main_s->ack[i]);
             printf("\n\n");
-            if (send(soc->sock, bufferMsg, bufferMsg[4] + 5, 0) < 0)
+            main_s->buf_f_struct->new_data_f = false;
+            if (send(soc->sock, main_s->ack, main_s->ack[4] + 5, 0) < 0)
             {
                 printf("Send failed\n");
                 return NULL;
             }
         }
         // if new IMG to send : send the TM
-        else if (main_s->img_s->img_f == true)
+        if (main_s->img_s->img_f == true)
         {
+            main_s->img_s->length = IMG_LENGTH;
             char *imgTM = imgEncodedTM(main_s->img_s->length);
             // Send some data
             printf("Sending image from process IA ... \n");
@@ -94,11 +99,13 @@ void *thread_send(void *arg)
             main_s->img_s->img_f = false;
             free(imgTM);
         }
-        else if (main_s->img_s->capture_f == true)
+        if (main_s->img_s->capture_f == true)
         {
             char *imgTM = captureManuelle(main_s->img_s->length);
             // Send some data
             printf("Sending image from manual capture ...\n");
+            printf("Code op : %d  ||  ", imgTM[0]);
+            printf("Length : %08x\n", (unsigned int) imgTM[1] | (unsigned int) imgTM[2] << 8 | (unsigned int) imgTM[3] << 16 | (unsigned int) imgTM[4] << 24);
             if (send(soc->sock, imgTM, main_s->img_s->length + 5, 0) < 0)
             {
                 printf("Send failed\n");
@@ -107,6 +114,35 @@ void *thread_send(void *arg)
             main_s->img_s->capture_f = false;
             free(imgTM);
         }
+    }
+    close(main_s->fifo);
+}
+
+void *thread_pred(void *arg)
+{
+    int pred; 
+    
+    while(1)
+    {
+        if ((main_s->fifo = open("IAtoINT", O_RDONLY)) == -1)
+        {
+            printf("erreur d'ouverture du pipe\n");
+            return NULL;
+        }
+        if (read(main_s->fifo, &pred, sizeof(pred)) == -1)
+        {
+            printf("erreur de lecture du pipe\n");
+            return NULL;
+        }
+        if (pred == 1)
+        {
+            main_s->img_s->img_f = true;
+        }
+        else 
+        {
+            main_s->img_s->img_f = false;
+        }
+        close(main_s->fifo);
     }
 }
 
@@ -162,9 +198,12 @@ int main()
         printf("erreur allocation mémoire\n");
         return -1;
     }
+    
     int socket_desc, sock, clientLen, read_size;
     struct sockaddr_in server, client;
     pthread_t thr_rcv_id, thr_send_id;
+    pthread_t thr_pred;
+
     // Create socket
     socket_thr_s *soc;
     if ((soc = malloc(sizeof(socket_thr_s))) == NULL)
@@ -199,12 +238,16 @@ int main()
         return -1;
     }
     printf("Connection accepted\n");
+
+    //pipe creation
     soc->sock = sock;
     soc->socket_desc = socket_desc;
     pthread_create(&thr_rcv_id, NULL, &thread_rcv, soc);
     pthread_create(&thr_send_id, NULL, &thread_send, soc);
+    pthread_create(&thr_pred, NULL, &thread_pred, NULL);
     pthread_join(thr_rcv_id, NULL);
     pthread_join(thr_send_id, NULL);
+    pthread_join(thr_pred, NULL);
     printf("end of main\n");
     return 0;
 }

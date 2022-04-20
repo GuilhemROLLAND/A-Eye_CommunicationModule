@@ -51,7 +51,6 @@ char *interpreteur(mainStruct *main_s)
     }
     if (main_s->cmd_struct->change_mode == true)
     {
-        cnt++;
         switch (main_s->chg_mode_struct->mode)
         {
         case 0:
@@ -107,7 +106,6 @@ char *interpreteur(mainStruct *main_s)
     }
     if (main_s->cmd_struct->weights_update == true)
     {
-        cnt++;
         // TO DO :
         // charger arch et weights dans IA en c
         // bonus
