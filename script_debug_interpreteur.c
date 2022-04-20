@@ -38,51 +38,41 @@ int main()
     char *bufferMsg = malloc(100 * sizeof(char));
     char buffer[100];
     main_s->buf_f_struct->cbuf = circular_buf_init(100);
-    char *tc;
+    char *tc[] =
+    {
+        "10",
+        "11",
+        "12",
+        "11",
+        "21",
+        "20",
+        "10",
+        "11",
+        "11",
+        "21",
+        "20",
+        "21",
+        "20",
+        "10",
+        "11",
+        "30"
+    };
     int ret;
-    tc = "11";
-    if (decodeTC(main_s, tc) == 0)
+    for (int i = 0; i < sizeof(tc)/sizeof(tc[0]); i++)
+    {
+        printf("Client message : %s\n", tc[i]);
+        if (decodeTC(main_s, tc[i]) == 0)
         printf("Not a TC\n");
-    interpreteur(main_s);
-    bufferMsg = circular_buf_get(main_s->buf_f_struct->cbuf, bufferMsg);
-    printf("Code op : %d\n", bufferMsg[0]);
-    printf("Length : %d\n", bufferMsg[4]);
-    printf("Message : ");
-    for (int i=5; i < bufferMsg[4] + 5; i++)
-        printf("%c", bufferMsg[i]);
-    printf("\n");
-    tc = "21";
-    if (decodeTC(main_s, tc) == 0)
-        printf("Not a TC\n");
-    interpreteur(main_s);
-    bufferMsg = circular_buf_get(main_s->buf_f_struct->cbuf, bufferMsg);
-    printf("Code op : %d\n", bufferMsg[0]);
-    printf("Length : %d\n", bufferMsg[4]);
-    printf("Message : ");
-    for (int i=5; i < bufferMsg[4] + 5; i++)
-        printf("%c", bufferMsg[i]);
-    printf("\n");
-    tc = "21";
-    if (decodeTC(main_s, tc) == 0)
-        printf("Not a TC\n");
-    interpreteur(main_s);
-    bufferMsg = circular_buf_get(main_s->buf_f_struct->cbuf, bufferMsg);
-    printf("Code op : %d\n", bufferMsg[0]);
-    printf("Length : %d\n", bufferMsg[4]);
-    printf("Message : ");
-    for (int i=5; i < bufferMsg[4] + 5; i++)
-        printf("%c", bufferMsg[i]);
-    printf("\n");
-    tc = "12";
-    if (decodeTC(main_s, tc) == 0)
-        printf("Not a TC\n");
-    interpreteur(main_s);
-    bufferMsg = circular_buf_get(main_s->buf_f_struct->cbuf, bufferMsg);
-    printf("Code op : %d\n", bufferMsg[0]);
-    printf("Length : %d\n", bufferMsg[4]);
-    printf("Message : ");
-    for (int i=5; i < bufferMsg[4] + 5; i++)
-        printf("%c", bufferMsg[i]);
-    printf("\n");
-
+        bufferMsg = interpreteur(main_s);
+        if (main_s->buf_f_struct->new_data_f == true)
+        {
+            printf("Will be send : \n");
+            printf("Code op : %d  ||  ", bufferMsg[0]);
+            printf("Length : %d  ||  ", bufferMsg[4]);
+            printf("Message : ");
+            for (int n = 5; n < bufferMsg[4] + 5; n++)
+                printf("%c", bufferMsg[n]);
+        }
+        printf("\n\n");
+    }
 }

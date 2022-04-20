@@ -34,6 +34,7 @@ int decodeTC(mainStruct *main_s, char *msg)
             if (main_s->chg_mode_struct->mode == 1 && msg[1] == '1') 
             {
                 main_s->chg_mode_struct->capture = true;
+                main_s->cmd_struct->change_mode = true;
             }
             else 
             {

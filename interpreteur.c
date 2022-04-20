@@ -30,6 +30,25 @@ char *interpreteur(mainStruct *main_s)
         printf("erreur allocation mémoire \n");
         return NULL;
     }
+    if (main_s->cmd_struct->start == true)
+    {
+        // TO DO :
+        // Sequence d'init
+        main_s->buf_f_struct->new_data_f = false;
+    }
+    else
+    {
+        // TO DO : stop le système
+        // bufferMsg = "Closing ...";
+        // string->length = strlen(bufferMsg);
+        // if ((string->string = malloc(sizeof(char)*string->length)) == NULL)
+        //         printf("erreur allocation memoire \n");
+        // string->string = bufferMsg;
+        // bufferMsg = stringEncodedTM(string, 4);
+        // circular_buf_put(main_s->buf_f_struct->cbuf, bufferMsg);
+        // main_s->buf_f_struct->new_data_f = true;
+        main_s->buf_f_struct->new_data_f = false;
+    }
     if (main_s->cmd_struct->change_mode == true)
     {
         cnt++;
@@ -58,7 +77,7 @@ char *interpreteur(mainStruct *main_s)
                     printf("erreur allocation memoire \n");
                 string->string = bufferMsg;
                 bufferMsg = stringEncodedTM(string, 4);
-                main_s->buf_f_struct->new_data_f == true;
+                main_s->buf_f_struct->new_data_f = true;
             }
             else
             {
@@ -70,7 +89,6 @@ char *interpreteur(mainStruct *main_s)
                 bufferMsg = stringEncodedTM(string, 4);
                 main_s->buf_f_struct->new_data_f = true;
             }
-
             break;
         case 2:
             // TO DO :
@@ -87,23 +105,6 @@ char *interpreteur(mainStruct *main_s)
             break;
         }
     }
-    if (main_s->cmd_struct->start == true)
-    {
-        // TO DO :
-        // Sequence d'init
-    }
-    else
-    {
-        // TO DO : stop le système
-        // bufferMsg = "Closing ...";
-        // string->length = strlen(bufferMsg);
-        // if ((string->string = malloc(sizeof(char)*string->length)) == NULL)
-        //         printf("erreur allocation memoire \n");
-        // string->string = bufferMsg;
-        // bufferMsg = stringEncodedTM(string, 4);
-        // circular_buf_put(main_s->buf_f_struct->cbuf, bufferMsg);
-        // main_s->buf_f_struct->new_data_f = true;
-    }
     if (main_s->cmd_struct->weights_update == true)
     {
         cnt++;
@@ -117,10 +118,6 @@ char *interpreteur(mainStruct *main_s)
         string->string = bufferMsg;
         bufferMsg = stringEncodedTM(string, 4);
         main_s->buf_f_struct->new_data_f = true;
-    }
-    if (cnt == 0)
-    {
-        main_s->buf_f_struct->new_data_f = false;
     }
     return bufferMsg;
 }
