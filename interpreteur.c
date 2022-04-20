@@ -1,12 +1,13 @@
 #include "interpreteur.h"
 #include "encodageTM.h"
 
-void interpreteur(mainStruct *main_s, char *bufferMsg)
+int interpreteur(mainStruct *main_s, char *bufferMsg)
 {
     STRINGLENGTH *string;
     
     if ((string = malloc(sizeof(STRINGLENGTH))) == NULL);
         printf("erreur allocation mémoire \n");
+        return -1;
     if (main_s->cmd_struct->change_mode == true)
     {
         switch (main_s->chg_mode_struct->mode)

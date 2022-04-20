@@ -5,7 +5,7 @@
 
 #include "interpreteur.h"
 
-void decodeTC(mainStruct *main_s, char *msg) 
+int decodeTC(mainStruct *main_s, char *msg) 
 {   
     // Test the first byte of the msg,
     // for TC, values can be 1, 2, 3, 4
@@ -19,13 +19,13 @@ void decodeTC(mainStruct *main_s, char *msg)
             {
                 case '0' :
                     main_s->chg_mode_struct->mode = 0;
-                    break;
+                    return 1;
                 case '1' :
                     main_s->chg_mode_struct->mode = 1;
-                    break;
+                    return 1;
                 case '2' :
                     main_s->chg_mode_struct->mode = 2;
-                    break;
+                    return 1;
             }
             break;
         // take picture mode
@@ -37,7 +37,7 @@ void decodeTC(mainStruct *main_s, char *msg)
             }
             else 
                 main_s->chg_mode_struct->capture = false;
-            break;
+            return 1;
         // start/stop
         case '3' :
             // check second byte to know if its start or stop
@@ -45,7 +45,7 @@ void decodeTC(mainStruct *main_s, char *msg)
                 main_s->cmd_struct->start = true;
             else 
                 main_s->cmd_struct->start = false;
-            break;
+            return 1;
         // update param AI, optional, TO DO
         case '4' :
             if (msg[1] == '1')
@@ -55,8 +55,9 @@ void decodeTC(mainStruct *main_s, char *msg)
             }
             else 
                 main_s->cmd_struct->weights_update = false;
-            break;
+            return 1;
         default :
-            break;
+            printf("no standard op code detected, no further action will be taken ..\n");
+            return 0;
     }
 }

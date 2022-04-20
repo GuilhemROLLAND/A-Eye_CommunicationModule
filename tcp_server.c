@@ -39,32 +39,32 @@ int main()
 {
     if ((main_s = malloc(sizeof(mainStruct))) == NULL)
     {
-        printf("erreur allocation mémoire");
+        printf("erreur allocation mémoire\n");
         return -1;
     }
     if ((main_s->img_s = malloc(sizeof(img))) == NULL)
     {
-        printf("erreur allocation mémoire");
+        printf("erreur allocation mémoire\n");
         return -1;
     }
     if ((main_s->cmd_struct = malloc(sizeof(cmd))) == NULL)
     {
-        printf("erreur allocation mémoire");
+        printf("erreur allocation mémoire\n");
         return -1;
     }
     if ((main_s->chg_mode_struct = malloc(sizeof(chg_mode))) == NULL)
     {
-        printf("erreur allocation mémoire");
+        printf("erreur allocation mémoire\n");
         return -1;
     }
     if ((main_s->weight_struct = malloc(sizeof(weight_upd))) == NULL)
     {
-        printf("erreur allocation mémoire");
+        printf("erreur allocation mémoire\n");
         return -1;
     }
     if ((main_s->buf_f_struct = malloc(sizeof(circular_buf_t) + sizeof(bool))) == NULL)
     {
-        printf("erreur allocation mémoire");
+        printf("erreur allocation mémoire\n");
         return -1;
     }
     char *bufferMsg = malloc(100 * sizeof(char));
@@ -77,7 +77,7 @@ int main()
     socket_desc = SocketCreate();
     if (socket_desc == -1)
     {
-        printf("Could not create socket");
+        printf("Could not create socket\n");
         return -1;
     }
     printf("Socket created\n");
@@ -85,7 +85,7 @@ int main()
     if (BindCreatedSocket(socket_desc) < 0)
     {
         // print the error message
-        perror("bind failed.");
+        perror("bind failed");
         return -1;
     }
     printf("bind done\n");
@@ -108,11 +108,13 @@ int main()
         // Receive a reply from the client
         if (recv(sock, client_message, 200, 0) < 0)
         {
-            printf("recv failed");
+            printf("recv failed\n");
         }
         else
         {
             printf("Client reply : %s\n", client_message);
+
+            // if we receieve stop message, we free all buffer and close the connection
             if (client_message == "STOP")
             {
                 // freeing memory space
@@ -128,36 +130,41 @@ int main()
                 close(socket_desc);
                 break;
             }
+
+            // if we receive another type of msg, we try to decode
             else
             {
-                decodeTC(main_s, client_message);
-                interpreteur(main_s, bufferMsg);
-                
+                //if no code op, no need to call interpreteur
+                if (decodeTC(main_s, client_message) == 0)
+                    printf("Not a TC\n");
+                else
+                    interpreteur(main_s, bufferMsg);
+
                 // if new data : send new data
                 if (main_s->buf_f_struct->new_data_f == true)
                 {
                     int j = circular_buf_get(main_s->buf_f_struct->cbuf, bufferMsg);
                     if (j == -1)
                     {
-                        printf("Retrieved failed");
+                        printf("Retrieved failed\n");
                         return -1;
                     }
 
                     // Send some data
                     if (send(sock, bufferMsg, strlen(bufferMsg), 0) < 0)
                     {
-                        printf("Send failed");
+                        printf("Send failed\n");
                         return -1;
                     }
                 }
-                // if TM has something to send : send the TM
+                // if new IMG to send : send the TM
                 else if (main_s->img_s->img_f == true)
                 {
                     char *imgTM = imgEncodedTM(main_s->img_s->addr, main_s->img_s->length);
                     // Send some data
                     if (send(sock, imgTM, main_s->img_s->length + 6, 0) < 0)
                     {
-                        printf("Send failed");
+                        printf("Send failed\n");
                         return -1;
                     }
                     free(imgTM);
@@ -165,5 +172,6 @@ int main()
             }
         }
     }
+    printf("end of while\n");
     return 0;
 }

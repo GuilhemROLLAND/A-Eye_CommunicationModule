@@ -18,35 +18,80 @@
     // Handle type, the way users interact with the API
     typedef circular_buf_t *cbuf_handle_t;
 
-    /// Pass in a storage buffer and size
-    /// Returns a circular buffer handle
+    /**
+     * @brief Pass in a storage buffer and size
+     * Returns a circular buffer handle
+     * 
+     * @param buffer initial buffer
+     * @param size of the cbuf to create
+     * @return cbuf_handle_t buffer handle
+     */
     cbuf_handle_t circular_buf_init(char *buffer, int size);
 
-    /// Free a circular buffer structure.
-    /// Does not free data buffer; owner is responsible for that
+    /**
+     * @brief Free a circular buffer structure.
+     * Does not free data buffer; owner is responsible for that
+     * 
+     * @param me buffer handle
+     */
     void circular_buf_free(cbuf_handle_t me);
 
-    /// Reset the circular buffer to empty, head == tail
+    /**
+     * @brief Reset the circular buffer to empty, head == tail
+     * 
+     * @param me buffer handle
+     */
     void circular_buf_reset(cbuf_handle_t me);
 
-    /// Put version 1 continues to add data if the buffer is full
-    /// Old data is overwritten
+    /**
+     * @brief Add data to the buffer, overwrite old data if buffer is full
+     * 
+     * @param me buffer handle
+     * @param data data to store
+     */
     void circular_buf_put(cbuf_handle_t me, char *data);
 
-    /// Retrieve a value from the buffer
-    /// Returns 0 on success, -1 if the buffer is empty
+    /**
+     * @brief Retrieve a value from the buffer
+     * 
+     * @param me buffer handle
+     * @param data output buffer to store data
+     * @return int Returns 0 on success, -1 if the buffer is empty
+     */
     int circular_buf_get(cbuf_handle_t me, char *data);
 
-    /// Returns true if the buffer is empty
+    /**
+     * @brief Returns true if the buffer is empty
+     * 
+     * @param me buffer handle
+     * @return true if buffer empty
+     * @return false if not empty
+     */
     bool circular_buf_empty(cbuf_handle_t me);
 
-    /// Returns true if the buffer is full
+    /**
+     * @brief Returns true if the buffer is full
+     * 
+     * @param me buffer handle
+     * @return true if buffer full
+     * @return false if not full
+     */
     bool circular_buf_full(cbuf_handle_t me);
 
-    /// Returns the maximum capacity of the buffer
+    /**
+     * @brief Returns the maximum capacity of the buffer
+     * 
+     * @param me buffer handle
+     * @return int buffer max capacity
+     */
     int circular_buf_capacity(cbuf_handle_t me);
 
-    /// Returns the current number of elements in the buffer
+    /**
+     * @brief Returns the current number of elements in the buffer
+     * 
+     * @param me buffer handle
+     * @return int number of element in the buffer
+     */
     int circular_buf_size(cbuf_handle_t me);
 
 #endif

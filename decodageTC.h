@@ -8,7 +8,8 @@
      *        Param update is done by updating the corresponding structures
      * 
      * @param msg the incoming msg received from server
+     * @return 1 if a standard code op is detected, else 0
      */
-    void decodeTC(mainStruct *main_s, char *msg);
+    int decodeTC(mainStruct *main_s, char *msg);
 
 #endif
