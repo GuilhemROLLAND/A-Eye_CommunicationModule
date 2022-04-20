@@ -142,6 +142,10 @@ void *thread_pred(void *arg)
         {
             main_s->img_s->img_f = false;
         }
+        if (main_s->chg_mode_struct->mode == 0)
+        {
+            system("bash ../demo.sh");
+        }
         close(main_s->fifo);
     }
 }
