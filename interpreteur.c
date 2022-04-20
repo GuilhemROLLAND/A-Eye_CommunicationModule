@@ -55,7 +55,7 @@ char *interpreteur(mainStruct *main_s)
         switch (main_s->chg_mode_struct->mode)
         {
         case 0:
-            // system("cd /home/root/A-Eye-Visor/\n./processIA")
+            // system("pkill --signal SIGUSR1 shipsnet")
             bufferMsg = "Process IA running";
             string->length = strlen(bufferMsg);
             if ((string->string = malloc(sizeof(char) * string->length)) == NULL)

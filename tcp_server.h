@@ -3,6 +3,7 @@
 #include<sys/socket.h>
 #include<arpa/inet.h>
 #include<unistd.h>
+#include <pthread.h>
 #include "decodageTC.h"
 #include "encodageTM.h"
 #include "struct_allocation.h"

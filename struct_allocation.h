@@ -1,6 +1,8 @@
 #include <string.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 #include "circular_buffer.h"
 
 #ifndef _STRUCTALLOCATION_H
