@@ -12,7 +12,13 @@ def decodeTM(bArr):
         file = open("temp.bmp", "wb")
         file.write(bArr)
         file.close()
-        pipeClient.writeInPipe("Get New Image")
+        pipeClient.writeInPipe("Get New Image in Auto Mode")
+    elif code == 0x70:
+        file = open("temp.bmp", "wb")
+        file.write(bArr)
+        file.close()
+        pipeClient.writeInPipe("Get New Image in Manual Mode")
+
     else:
         # Other
         pipeClient.writeInPipe("OpCode not implemented in decodageTM")
