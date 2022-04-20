@@ -47,7 +47,7 @@ int testDecodageTC()
         printf("erreur allocation mémoire \n");
         return -1;
     }
-    main_s->buf_f_struct->cbuf = circular_buf_init(init_buf, 100);
+    main_s->buf_f_struct->cbuf = circular_buf_init(100);
     circular_buf_reset(main_s->buf_f_struct->cbuf);
     char *msg; 
     char nbOfCodeOpToTest = 9;

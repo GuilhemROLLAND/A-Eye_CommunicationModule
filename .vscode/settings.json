@@ -4,6 +4,7 @@
         "stdio.h": "c",
         "circular_buffer.h": "c",
         "stdlib.h": "c",
-        "interpreteur.h": "c"
+        "interpreteur.h": "c",
+        "struct_allocation.h": "c"
     }
 }

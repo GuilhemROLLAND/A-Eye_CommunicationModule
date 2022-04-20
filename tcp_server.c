@@ -138,11 +138,10 @@ int main()
                 if (decodeTC(main_s, client_message) == 0)
                     printf("Not a TC\n");
                 else
-                    interpreteur(main_s);
+                    bufferMsg = interpreteur(main_s);
                 // if new data : send new data
                 if (main_s->buf_f_struct->new_data_f == true)
                 {
-                    bufferMsg = circular_buf_get(main_s->buf_f_struct->cbuf, bufferMsg);
                     // Send some data
                     printf("Code op : %d\n", bufferMsg[0]);
                     printf("Length : %d\n", bufferMsg[4]);

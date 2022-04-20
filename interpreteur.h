@@ -9,7 +9,7 @@
      * @param main_s main structure 
      * @return int -1 if memory allocation failed
      */
-    int interpreteur(mainStruct *main_s);
+    char* interpreteur(mainStruct *main_s);
 
 
 #endif

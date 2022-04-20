@@ -83,7 +83,7 @@ static void retreat_pointer(cbuf_handle_t me)
 
 void circular_buf_put(cbuf_handle_t me, char *data)
 {
-    me->buffer[me->head] = data;
+    memcpy(me->buffer[me->head], data, data[4] + 5);
     advance_pointer(me);
 }
 

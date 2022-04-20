@@ -40,7 +40,7 @@ int main()
     main_s->buf_f_struct->cbuf = circular_buf_init(100);
     char *tc;
     int ret;
-    tc = "30";
+    tc = "11";
     if (decodeTC(main_s, tc) == 0)
         printf("Not a TC\n");
     interpreteur(main_s);
@@ -51,7 +51,7 @@ int main()
     for (int i=5; i < bufferMsg[4] + 5; i++)
         printf("%c", bufferMsg[i]);
     printf("\n");
-    tc = "10";
+    tc = "21";
     if (decodeTC(main_s, tc) == 0)
         printf("Not a TC\n");
     interpreteur(main_s);
