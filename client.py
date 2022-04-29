@@ -19,24 +19,28 @@ class Payload(Structure):
                 ("temp", c_float)]
 
 
-def tcp_client_send(msg):
+def tcp_client_send():
     server_addr = ('192.168.1.21', 64000)
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
     try:
         s.connect(server_addr)
         print("Connected to {:s}".format(repr(server_addr)))
-        nsent = s.send(msg.encode())
-        buff = s.recv(1024)
-        print(buff.decode())
     except AttributeError as ae:
         print("Error creating the socket: {}".format(ae))
     except socket.error as se:
         print("Exception on socket: {}".format(se))
-    finally:
-        print("Closing socket")
-        s.close()
+    while(1):
+        msg = input("Message to send : ")
+        nsent = s.send(msg.encode())
+        buff = s.recv(1024)
+        print(buff.decode())
+        if (buff == "STOP") :
+            s.close()
+   
+
 
 
 if __name__ == "__main__":
-    tcp_client_send()
+        tcp_client_send()
+    
+    
