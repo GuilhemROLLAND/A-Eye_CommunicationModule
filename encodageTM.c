@@ -23,12 +23,17 @@ STRINGLENGTH* ackTxtFileReading(char* filePath)
 TELEMESURE* stringEncodedTM(STRINGLENGTH* inputString, unsigned char typeOfAck) 
 {
     TELEMESURE* tm;
-    char string[inputString->length];
+    tm = malloc((inputString->length+1)*sizeof(char) + sizeof(int));
+    if (tm == NULL)
+        printf("erreur d'allocation mémoire \n");
+    char *string;
+    string = malloc(inputString->length*sizeof(char));
+    if (string == NULL) 
+        printf("erreur allocation mémoire \n");
     for (int n =0; n<inputString->length ; n++)
     {
         string[n] = *(inputString->string + n);
     }
-    char TM[inputString->length + 1];
     switch(typeOfAck) 
     {
         case 0 : //startStopFlag
