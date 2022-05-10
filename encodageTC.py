@@ -48,26 +48,26 @@ def decode_send_tc(ip, port) :
 
     # TC modeSelector 
     if 'values_changed' in diff :
-        if "root['config']['modeSelector']" in diff['values_changed']:
-            mode = diff['values_changed']["root['config']['modeSelector']"]['new_value']
+        if "root['Config']['ModeSelector']" in diff['values_changed']:
+            mode = diff['values_changed']["root['Config']['ModeSelector']"]['new_value']
             tc.append("1{}".format(mode))  
-        if "root['config']['startStop']" in diff['values_changed']:
-            mode = diff['values_changed']["root['config']['startStop']"]['new_value']
-            if mode == 'true' :
+        if "root['Config']['StartStop']" in diff['values_changed']:
+            mode = diff['values_changed']["root['Config']['StartStop']"]['new_value']
+            if mode == 'True' :
                 tc.append("31")
             else :
                 tc.append("30")
         # TC weights         
-        if "root['weights']['valid']"  in diff['values_changed']:
-            mode = diff['values_changed']["root['weights']['valid']"]['new_value']
-            if mode == 'true' :
+        if "root['Weights']['valid']"  in diff['values_changed']:
+            mode = diff['values_changed']["root['Weights']['Valid']"]['new_value']
+            if mode == 'True' :
                 tc.append("41")
             else :
                 tc.append("40")
         # TC takePicture 
-        if "root['takePicture']['valid']" in diff['values_changed']:
-            mode = diff['values_changed']["root['takePicture']['valid']"]['new_value']
-            if mode == 'true' :
+        if "root['TakePicture']['Valid']" in diff['values_changed']:
+            mode = diff['values_changed']["root['TakePicture']['Valid']"]['new_value']
+            if mode == 'True' :
                 tc.append("21")
             else :
                 tc.append("20")
