@@ -47,7 +47,7 @@ def decode_send_tc(ip, port) :
     # TC decoding
 
     # TC modeSelector 
-    if ['values_changed'] in diff :
+    if 'values_changed' in diff :
         if "root['config']['modeSelector']" in diff['values_changed']:
             mode = diff['values_changed']["root['config']['modeSelector']"]['new_value']
             tc.append("1{}".format(mode))  
