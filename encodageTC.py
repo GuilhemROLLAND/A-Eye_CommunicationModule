@@ -47,29 +47,30 @@ def decode_send_tc(ip, port) :
     # TC decoding
 
     # TC modeSelector 
-    if "root['config']['modeSelector']" in diff['values_changed']:
-        mode = diff['values_changed']["root['config']['modeSelector']"]['new_value']
-        tc.append("1{}".format(mode))  
-    if "root['config']['startStop']" in diff['values_changed']:
-        mode = diff['values_changed']["root['config']['startStop']"]['new_value']
-        if mode == 'true' :
-            tc.append("31")
-        else :
-            tc.append("30")
-    # TC weights         
-    if "root['weights']['valid']"  in diff['values_changed']:
-        mode = diff['values_changed']["root['weights']['valid']"]['new_value']
-        if mode == 'true' :
-            tc.append("41")
-        else :
-            tc.append("40")
-    # TC takePicture 
-    if "root['takePicture']['valid']" in diff['values_changed']:
-        mode = diff['values_changed']["root['takePicture']['valid']"]['new_value']
-        if mode == 'true' :
-            tc.append("21")
-        else :
-            tc.append("20")
+    if ("values_changed") in diff :
+        if "root['config']['modeSelector']" in diff['values_changed']:
+            mode = diff['values_changed']["root['config']['modeSelector']"]['new_value']
+            tc.append("1{}".format(mode))  
+        if "root['config']['startStop']" in diff['values_changed']:
+            mode = diff['values_changed']["root['config']['startStop']"]['new_value']
+            if mode == 'true' :
+                tc.append("31")
+            else :
+                tc.append("30")
+        # TC weights         
+        if "root['weights']['valid']"  in diff['values_changed']:
+            mode = diff['values_changed']["root['weights']['valid']"]['new_value']
+            if mode == 'true' :
+                tc.append("41")
+            else :
+                tc.append("40")
+        # TC takePicture 
+        if "root['takePicture']['valid']" in diff['values_changed']:
+            mode = diff['values_changed']["root['takePicture']['valid']"]['new_value']
+            if mode == 'true' :
+                tc.append("21")
+            else :
+                tc.append("20")
     print(tc)
     for i in range(len(tc)) :
         tcp_client_send(tc[i], ip, port)
