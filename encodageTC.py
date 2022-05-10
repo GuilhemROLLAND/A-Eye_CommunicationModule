@@ -58,7 +58,7 @@ def decode_send_tc(ip, port) :
             else :
                 tc.append("30")
         # TC weights         
-        if "root['Weights']['valid']"  in diff['values_changed']:
+        if "root['Weights']['Valid']"  in diff['values_changed']:
             mode = diff['values_changed']["root['Weights']['Valid']"]['new_value']
             if mode == 'True' :
                 tc.append("41")
