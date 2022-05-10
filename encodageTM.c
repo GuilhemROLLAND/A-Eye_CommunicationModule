@@ -55,6 +55,34 @@ TELEMESURE* stringEncodedTM(STRINGLENGTH* inputString, unsigned char typeOfAck)
     return tm;
 }
 
+void stringEncodedTM(STRINGLENGTH* inputString, unsigned char typeOfAck) 
+{
+    char *string;
+    string = malloc(inputString->length*sizeof(char));
+    if (string == NULL) 
+        printf("erreur allocation mémoire \n");
+    switch(typeOfAck) 
+    {
+        case 0 : //startStopFlag
+            // "0xcodeOp phrase d'acquittement"
+            
+            break;
+        case 1 : //takePct
+            tm->codeOp = 0x20;
+            break;
+        case 2 : //loadWeights
+            tm->codeOp = 0x40;
+            break;
+        case 3 : //arbitrary string
+            tm->codeOp = 0x60;
+            break;
+    }
+    char* ptr_tm = &string[0];
+    tm->addrContent = ptr_tm;
+    tm->length = inputString->length+1;
+    return tm;
+}
+
 TELEMESURE* imgEncodedTM(unsigned char* addr, int length) 
 {
     TELEMESURE* tm;
