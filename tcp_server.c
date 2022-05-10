@@ -1,8 +1,12 @@
-#include<stdio.h>
-#include<string.h>
-#include<sys/socket.h>
-#include<arpa/inet.h>
-#include<unistd.h>
+#include "tcp_server.h"
+
+struct mainStruct *main_s;
+
+/**
+ * @brief Create a tcp socket 
+ * 
+ * @return short 
+ */
 short SocketCreate(void)
 {
     short hSocket;
@@ -10,10 +14,17 @@ short SocketCreate(void)
     hSocket = socket(AF_INET, SOCK_STREAM, 0);
     return hSocket;
 }
+
+/**
+ * @brief Bind an existing socket to a port and accepting any incoming addr
+ * 
+ * @param hSocket ref to the socket
+ * @return int 
+ */
 int BindCreatedSocket(int hSocket)
 {
     int iRetval=-1;
-    int ClientPort = 90190;
+    int ClientPort = 64000;
     struct sockaddr_in  remote= {0};
     /* Internet address family */
     remote.sin_family = AF_INET;
@@ -23,13 +34,28 @@ int BindCreatedSocket(int hSocket)
     iRetval = bind(hSocket,(struct sockaddr *)&remote,sizeof(remote));
     return iRetval;
 }
-int main(int argc, char *argv[])
+
+
+int main()
 {
+    if ((main_s = malloc(sizeof(mainStruct))) == NULL)
+        printf("erreur allocation mémoire");
+    if ((main_s->img_s = malloc(sizeof(img))) == NULL)
+        printf("erreur allocation mémoire");
+    if((main_s->cmd_struct = malloc(sizeof(cmd))) == NULL)
+        printf("erreur allocation mémoire");
+    if ((main_s->chg_mode_struct = malloc(sizeof(chg_mode))) == NULL)
+        printf("erreur allocation mémoire");
+    if ((main_s->weight_struct = malloc(sizeof(weight_upd))) == NULL)
+        printf("erreur allocation mémoire");
+    if ((main_s->buf_f_struct = malloc(sizeof(circular_buf_t)+sizeof(bool))) == NULL)
+        printf("erreur allocation mémoire");
+    char *bufferMsg = malloc(100*sizeof(char));
     int socket_desc, sock, clientLen, read_size;
     struct sockaddr_in server, client;
     char client_message[200]= {0};
     char message[100] = {0};
-    const char *pMessage = "hello aticleworld.com";
+    main_s->buf_f_struct->cbuf = circular_buf_init(bufferMsg, 100);
     //Create socket
     socket_desc = SocketCreate();
     if (socket_desc == -1)
@@ -48,21 +74,20 @@ int main(int argc, char *argv[])
     printf("bind done\n");
     //Listen
     listen(socket_desc, 3);
-    //Accept and incoming connection
+    printf("Waiting for incoming connections...\n");
+    clientLen = sizeof(struct sockaddr_in);
+    //accept connection from an incoming client
+    sock = accept(socket_desc,(struct sockaddr *)&client,(socklen_t*)&clientLen);
+    if (sock < 0)
+    {
+        perror("accept failed");
+        return 1;
+    }
+    printf("Connection accepted\n");
+    memset(message, '\0', sizeof message);
     while(1)
     {
-        printf("Waiting for incoming connections...\n");
-        clientLen = sizeof(struct sockaddr_in);
-        //accept connection from an incoming client
-        sock = accept(socket_desc,(struct sockaddr *)&client,(socklen_t*)&clientLen);
-        if (sock < 0)
-        {
-            perror("accept failed");
-            return 1;
-        }
-        printf("Connection accepted\n");
-        memset(client_message, '\0', sizeof client_message);
-        memset(message, '\0', sizeof message);
+        memset(client_message, 0, sizeof(client_message));
         //Receive a reply from the client
         if( recv(sock, client_message, 200, 0) < 0)
         {
@@ -70,21 +95,48 @@ int main(int argc, char *argv[])
             break;
         }
         printf("Client reply : %s\n",client_message);
-        if(strcmp(pMessage,client_message)==0)
+        if(client_message == "STOP") 
         {
-            strcpy(message,"Hi there !");
+            //freeing memory space
+            circular_buf_free(main_s->buf_f_struct->cbuf);
+            free(bufferMsg);
+            free(main_s->cmd_struct);
+            free(main_s->buf_f_struct);
+            free(main_s->weight_struct);
+            free(main_s->chg_mode_struct);
+            free(main_s);
+            //send end of connection and close socket
+            send(sock, client_message, strlen(client_message), 0);
+            close(socket_desc);
         }
-        else
+        decodeTC(main_s, client_message);
+        interpreteur(main_s, bufferMsg);
+        // if new data : send new data
+        //TO DO : 
+        // if TM has something to send : send the TM
+        if (main_s->buf_f_struct->new_data_f == true)
         {
-            strcpy(message,"Invalid Message !");
+            int j = circular_buf_get(main_s->buf_f_struct->cbuf, bufferMsg); 
+            if (j == -1)
+                printf("Retrieved failed");
+            
+            // Send some data
+            if( send(sock, bufferMsg, strlen(bufferMsg), 0) < 0)
+            {
+                printf("Send failed");
+                return 1;
+            }
         }
-        // Send some data
-        if( send(sock, message, strlen(message), 0) < 0)
+        else if (main_s->img_s->img_f == true)
         {
-            printf("Send failed");
-            return 1;
+            char *imgTM = imgEncodedTM(main_s->img_s->addr, main_s->img_s->length);
+            // Send some data
+            if( send(sock, imgTM, strlen(imgTM), 0) < 0)
+            {
+                printf("Send failed");
+                return 1;
+            }
         }
-        close(sock);
         sleep(1);
     }
     return 0;

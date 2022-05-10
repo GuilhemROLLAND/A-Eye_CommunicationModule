@@ -20,75 +20,65 @@ STRINGLENGTH* ackTxtFileReading(char* filePath)
     return str;
 }
 
-TELEMESURE* stringEncodedTM(STRINGLENGTH* inputString, unsigned char typeOfAck) 
+char* stringEncodedTM(STRINGLENGTH* inputString, unsigned char typeOfAck) 
 {
-    TELEMESURE* tm;
-    tm = malloc((inputString->length+1)*sizeof(char) + sizeof(int));
-    if (tm == NULL)
-        printf("erreur d'allocation mémoire \n");
     char *string;
+    char *temp;
+    char *dest;
     string = malloc(inputString->length*sizeof(char));
     if (string == NULL) 
         printf("erreur allocation mémoire \n");
-    for (int n =0; n<inputString->length ; n++)
-    {
-        string[n] = *(inputString->string + n);
-    }
-    switch(typeOfAck) 
-    {
-        case 0 : //startStopFlag
-            tm->codeOp = 0x30;
-            break;
-        case 1 : //takePct
-            tm->codeOp = 0x20;
-            break;
-        case 2 : //loadWeights
-            tm->codeOp = 0x40;
-            break;
-        case 3 : //arbitrary string
-            tm->codeOp = 0x60;
-            break;
-    }
-    char* ptr_tm = &string[0];
-    tm->addrContent = ptr_tm;
-    tm->length = inputString->length+1;
-    return tm;
-}
-
-void stringEncodedTM(STRINGLENGTH* inputString, unsigned char typeOfAck) 
-{
-    char *string;
-    string = malloc(inputString->length*sizeof(char));
-    if (string == NULL) 
+    temp = malloc(4*sizeof(char));
+    if (temp == NULL) 
+        printf("erreur allocation mémoire \n");
+    dest = malloc((strlen(temp) + strlen(string)) * sizeof(char));
+    if (dest == NULL)
         printf("erreur allocation mémoire \n");
     switch(typeOfAck) 
     {
-        case 0 : //startStopFlag
-            // "0xcodeOp phrase d'acquittement"
-            
+        case 0 : //chg_mode_ack
+            temp = "0x10";
+            strcpy(dest, temp);
+            strcat(dest, " ");
+            strcat(dest, inputString->string); 
             break;
-        case 1 : //takePct
-            tm->codeOp = 0x20;
+        case 1 : //takePct ack
+            temp = "0x20";
+            strcpy(dest, temp);
+            strcat(dest, " ");
+            strcat(dest, inputString->string); 
             break;
-        case 2 : //loadWeights
-            tm->codeOp = 0x40;
+        case 2 : //startStopFlag
+            temp = "0x30";
+            strcpy(dest, temp);
+            strcat(dest, " ");
+            strcat(dest, inputString->string); 
             break;
-        case 3 : //arbitrary string
-            tm->codeOp = 0x60;
+        case 3 : //loadWeights
+            temp = "0x40";
+            strcpy(dest, temp);
+            strcat(dest, " ");
+            strcat(dest, inputString->string); 
+            break;
+        case 4 : //arbitrary string
+            temp = "0x60";
+            strcpy(dest, temp);
+            strcat(dest, " ");
+            strcat(dest, inputString->string); 
             break;
     }
-    char* ptr_tm = &string[0];
-    tm->addrContent = ptr_tm;
-    tm->length = inputString->length+1;
-    return tm;
+    return dest;
 }
 
-TELEMESURE* imgEncodedTM(unsigned char* addr, int length) 
+char* imgEncodedTM(int* addr, int length) 
 {
-    TELEMESURE* tm;
-    tm->codeOp = 0x50;
-    tm->addrContent = addr;
-    tm->length = length;
-    return tm;
+    char *imgTM;
+    if (imgTM = malloc((length*sizeof(unsigned char)) + 4*sizeof(char)) == NULL)
+        printf("erreur allocation mémoire \n");
+    imgTM[0] = "0";
+    imgTM[1] = "x";
+    imgTM[2] = "5";
+    imgTM[3] = "0";
+    imgTM[4] = *addr;
+    return imgTM;
 }
-

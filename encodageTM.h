@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include "circular_buffer.h"
 
 #ifndef _ENCODAGETM_H
 #define _ENCODAGETM_H
@@ -17,7 +18,7 @@
         int length;
         char* addrContent; 
         char codeOp;
-    }TELEMESURE;
+    } TELEMESURE;
     #endif
 
     #ifndef H_CHANGEMODEACK
@@ -30,7 +31,7 @@
         loadWeigthsFlag,
         stringFlag,
         numberofAck
-    }CHANGEMODEACK;
+    } CHANGEMODEACK;
     #endif
 
     #ifndef H_TYPEOFTM
@@ -40,7 +41,7 @@
     {
         bool imgFlag;
         CHANGEMODEACK ackFlag; 
-    }TYPEOFTM;
+    } TYPEOFTM;
     #endif
 
     #ifndef H_STRINGLENGTH
@@ -50,7 +51,7 @@
     {
         unsigned char length;
         char* string; 
-    }STRINGLENGTH;
+    } STRINGLENGTH;
     #endif
 
     // FUNCTIONS
@@ -59,7 +60,7 @@
     /**
      * @brief read a txt file containing the ack and outputs the ack in string format
      * 
-     * @param filePath tct file containing the ack
+     * @param filePath txt file containing the ack
      * @return char* ack in a string format
      */
     STRINGLENGTH* ackTxtFileReading(char* filePath);
@@ -71,7 +72,7 @@
      * @param typeOfAck ack type
      * @return TELEMESURE* struct containing the starting addr of the data, codeOp and length
      */
-    TELEMESURE* stringEncodedTM(STRINGLENGTH* inputString, unsigned char typeOfAck);
+    char* stringEncodedTM(STRINGLENGTH* inputString, unsigned char typeOfAck);
 
     /**
      * @brief convert an img into a telemesure
@@ -80,6 +81,6 @@
      * @param length length of the img
      * @return TELEMESURE* struct containing the starting addr of the data, codeOp and length
      */
-    TELEMESURE* imgEncodedTM(unsigned char* addr, int length);
+    char* imgEncodedTM(int* addr, int length);
 
 #endif
