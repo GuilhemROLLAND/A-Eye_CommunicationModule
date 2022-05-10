@@ -40,7 +40,7 @@ def decode_send_tc(ip, port) :
     last_config = json.load(f2)
 
     # Search for differences in config files
-    diff = DeepDiff(new_config,last_config, ignore_string_case = True)
+    diff = DeepDiff(last_config,new_config, ignore_string_case = True)
     diff = diff.to_dict()
     tc = []
 
