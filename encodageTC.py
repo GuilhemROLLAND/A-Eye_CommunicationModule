@@ -74,7 +74,7 @@ def decode_send_tc(ip, port) :
     print(tc)
     for i in range(len(tc)) :
         tcp_client_send(tc[i], ip, port)
-    with open('./config.json', 'w', encoding='utf-8') as f :
+    with open('./last_config.json', 'w', encoding='utf-8') as f :
         json.dump(new_config, f, ensure_ascii=False, indent = 4)
 
 
