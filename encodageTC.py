@@ -1,6 +1,7 @@
 from asyncio.windows_events import NULL
 import json
 import argparse
+import string
 from deepdiff import DeepDiff
 import socket
 
@@ -78,10 +79,10 @@ def decode_send_tc(ip, port) :
 
 
 
-parser = argparse.ArgumentParser(description="encodageTC",
-                                 formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-parser.add_argument("-i", "--ip", action="store_true", help="take IpV4 format addr")
-parser.add_argument("-p", "--port", action="store_true", help="port of the server")
+parser = argparse.ArgumentParser()
+parser.add_argument("-i", "--ip", type=str,required=True, help="take IpV4 format addr")
+parser.add_argument("-p", "--port", type=int, required=True, help="port of the server")
 args = parser.parse_args()
-print(args)
-# decode_send_tc(args[0], args[1])
+print(args.ip)
+print(args.port)
+#decode_send_tc(args.ip, args.port)
