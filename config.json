@@ -1,12 +1,12 @@
 {
-    "config" : {
-        "startStop" : "true",
-        "modeSelector" : "1"
+    "Config": {
+        "StartStop": "True",
+        "ModeSelector": "1"
     },
-    "weights" : {
-        "valid" : "false"
+    "Weights": {
+        "Valid": "False"
     },
-    "takePicture" : {
-        "valid" : "false"
+    "TakePicture": {
+        "Valid": "False"
     }
 }

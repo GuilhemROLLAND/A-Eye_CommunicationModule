@@ -4,35 +4,9 @@ import argparse
 import string
 from deepdiff import DeepDiff
 import socket
+import client
 
-"""
-Create an instance of a tcp client connecting to zybo addr and port 64000
-If the tcp server is active on zybo, this function will connect to the tcp server 
-and send the specified message
-"""
-def tcp_client_send(msg, ip, port):
-
-    # Connection parameters
-    server_addr = (ip, port)
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    # Connected and send msg, wait for ack
-    try:
-        s.connect(server_addr)
-        print("Connected to {:s}".format(repr(server_addr)))
-        nsent = s.send(msg.encode())
-        buff = s.recv(1024)
-        print(buff.decode())
-    except AttributeError as ae:
-        print("Error creating the socket: {}".format(ae))
-    except socket.error as se:
-        print("Exception on socket: {}".format(se))
-    # Close connection after ack
-    finally:
-        print("Closing socket")
-        s.close()
-
-
-def decode_send_tc(ip, port) : 
+def encode_tc() : 
     # Loading json config file
     f1 = open('config.json')
     f2 = open('last_config.json')
@@ -71,17 +45,8 @@ def decode_send_tc(ip, port) :
                 tc.append("21")
             else :
                 tc.append("20")
-    print(tc)
-    for i in range(len(tc)) :
-        tcp_client_send(tc[i], ip, port)
+    # for i in range(len(tc)) :
+    #     client.client.tcp_client_send(tc[i])
     with open('./last_config.json', 'w', encoding='utf-8') as f :
         json.dump(new_config, f, ensure_ascii=False, indent = 4)
-
-
-
-
-parser = argparse.ArgumentParser()
-parser.add_argument("-i", "--ip", type=str,required=True, help="take IpV4 format addr")
-parser.add_argument("-p", "--port", type=int, required=True, help="port of the server")
-args = parser.parse_args()
-decode_send_tc(args.ip, args.port)
+    return tc
