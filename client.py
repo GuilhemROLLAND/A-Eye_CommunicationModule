@@ -18,6 +18,7 @@ from ctypes import *
 from threading import Thread
 from time import sleep
 import encodageTC
+import decodageTM
 
 class client:
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -57,7 +58,8 @@ class client:
         print("In tcp_client_receive")
         while(1):
             buff = client.s.recv(1024)
-            print(buff.decode())
+            buff = buff.decode()
+            decodageTM.decodeTM(buff)
 
 
 if __name__ == "__main__":
