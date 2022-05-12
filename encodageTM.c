@@ -71,31 +71,27 @@ char *stringEncodedTM(STRINGLENGTH *inputString, unsigned char typeOfAck)
 
 char *imgEncodedTM(int *addr, int length)
 {
+    // length = 1228938;
     char *imgTM;
-    if (imgTM = malloc((length * sizeof(unsigned char)) + 4 * sizeof(char)) == NULL)
+    if (imgTM = malloc((length * sizeof(unsigned char)) + 6 * sizeof(char)) == NULL)
+    {
         printf("erreur allocation mémoire \n");
-    imgTM[0] = 0x5;
+        return;
+    }
+    imgTM[0] = (char)0x50;
     imgTM[1] = (length >> 24) & 0xFF;
     imgTM[2] = (length >> 16) & 0xFF;
-    imgTM[3] = (length >> 8)  & 0xFF;
-    imgTM[4] = length & 0xFF ;
-    imgTM[5] = addr;
+    imgTM[3] = (length >> 8) & 0xFF;
+    imgTM[4] = length & 0xFF;
+    imageInTM(imgTM[5], "pict.bmp");
     return imgTM;
 }
 
 int imageInTM(char *buffer, char *file)
 {
-    // char buffer_img[2000000] = {0};
+    // char buffer[2000000] = {0};
     FILE *file = fopen(file, "r");
     int len = 0;
-    *buffer = (char)0x50;
-    len++;
-    uint32_t sizeBMP = 1228938;
-    buffer[1] = (sizeBMP >> 24) & 0xFF;
-    buffer[2] = (sizeBMP >> 16) & 0xFF;
-    buffer[3] = (sizeBMP >> 8) & 0xFF;
-    buffer[4] = sizeBMP & 0xFF;
-    len += 4;
-    len += fread(buffer + len, 1, 2000000 - len, file);
+    len += fread(buffer + len, 1, 2000000, file);
     return len;
 }
