@@ -74,11 +74,12 @@ char *imgEncodedTM(int *addr, int length)
     char *imgTM;
     if (imgTM = malloc((length * sizeof(unsigned char)) + 4 * sizeof(char)) == NULL)
         printf("erreur allocation mémoire \n");
-    imgTM[0] = "0";
-    imgTM[1] = "x";
-    imgTM[2] = "5";
-    imgTM[3] = "0";
-    imgTM[4] = *addr;
+    imgTM[0] = 0x5;
+    imgTM[1] = (length >> 24) & 0xFF;
+    imgTM[2] = (length >> 16) & 0xFF;
+    imgTM[3] = (length >> 8)  & 0xFF;
+    imgTM[4] = length & 0xFF ;
+    imgTM[5] = addr;
     return imgTM;
 }
 
