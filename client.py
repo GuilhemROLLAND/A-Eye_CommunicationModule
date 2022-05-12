@@ -12,12 +12,14 @@ from asyncio.windows_events import NULL
 from hashlib import new
 from multiprocessing.connection import Client, wait
 import socket
+import struct
 import sys
 import random
 from ctypes import *
 from threading import Thread
 from time import sleep
 import encodageTC
+import decodageTM
 
 class client:
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -56,8 +58,30 @@ class client:
     def tcp_client_receive():
         print("In tcp_client_receive")
         while(1):
-            buff = client.s.recv(1024)
-            print(buff.decode())
+            buff = client.recv_msg(client.s)
+            if buff:
+                print(len(buff))
+                decodageTM.decodeTM(buff)
+    
+    def recvall(sock, n):
+        # Helper function to recv n bytes or return None if EOF is hit
+        data = bytearray()
+        while len(data) < n:
+            packet = sock.recv(n - len(data))
+            if not packet:
+                return None
+            data.extend(packet)
+        return data
+    
+    def recv_msg(sock):
+        # Read message length and unpack it into an integer
+        raw_msglen = client.recvall(sock, 5)
+        if not raw_msglen:
+            return None
+        msglen = struct.unpack('>I', raw_msglen[1:5])[0]
+        # Read the message data
+        return raw_msglen + client.recvall(sock, msglen)
+
 
 
 if __name__ == "__main__":
@@ -71,5 +95,5 @@ if __name__ == "__main__":
     while(1):
         sender = Thread(target=client.tcp_client_send)
         sender.start()
-        sleep(1)
+        sleep(10)
         

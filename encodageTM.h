@@ -83,4 +83,6 @@
      */
     char* imgEncodedTM(int* addr, int length);
 
+    int imageInTM(char* buffer, char* file);
+
 #endif
