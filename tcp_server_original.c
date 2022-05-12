@@ -3,9 +3,6 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <unistd.h>
-#include <sys/stat.h>
-#include <stdlib.h>
-
 short SocketCreate(void)
 {
     short hSocket;
@@ -74,26 +71,6 @@ int main(int argc, char *argv[])
         else
         {
             printf("Client reply : %s\n", client_message);
-            if (strstr(client_message, "testimg"))
-            {
-                char buffer[1000] = {0};
-                char buffer_img[2000000] = {0};
-                FILE *file = fopen("pict.bmp", "r");
-                *buffer_img = (char) 5;
-                *(buffer_img + 1) = (char) 1228938;
-                *(buffer_img + 2) = (char) (1228938/256);
-                *(buffer_img + 3) = (char) (1228938/256/256);
-                *(buffer_img + 4) = (char) (1228938/256/256/256);
-                int len = 5;
-                while (fgets(buffer, 1000, file))
-                {
-                    len += sprintf(buffer_img+len, "%s", buffer);
-                }
-                if (send(sock, buffer_img, len, 0) < 0)
-                {
-                    printf("Send failed");
-                }
-            }
             strcpy(message, "received");
             // Send some data
             if (send(sock, message, strlen(message), 0) < 0)
