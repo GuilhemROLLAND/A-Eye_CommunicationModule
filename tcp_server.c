@@ -132,9 +132,8 @@ int main()
             {
                 decodeTC(main_s, client_message);
                 interpreteur(main_s, bufferMsg);
+                
                 // if new data : send new data
-                // TO DO :
-                // if TM has something to send : send the TM
                 if (main_s->buf_f_struct->new_data_f == true)
                 {
                     int j = circular_buf_get(main_s->buf_f_struct->cbuf, bufferMsg);
@@ -151,6 +150,7 @@ int main()
                         return -1;
                     }
                 }
+                // if TM has something to send : send the TM
                 else if (main_s->img_s->img_f == true)
                 {
                     char *imgTM = imgEncodedTM(main_s->img_s->addr, main_s->img_s->length);
@@ -162,7 +162,6 @@ int main()
                     }
                     free(imgTM);
                 }
-                sleep(1);
             }
         }
     }
