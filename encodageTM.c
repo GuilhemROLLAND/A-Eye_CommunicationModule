@@ -72,25 +72,25 @@ char *stringEncodedTM(STRINGLENGTH *inputString, unsigned char typeOfAck)
 char *imgEncodedTM(int *addr, int length)
 {
     // length = 1228938;
-    char *imgTM;
-    if (imgTM = malloc((length * sizeof(unsigned char)) + 6 * sizeof(char)) == NULL)
+    char *imgTM = malloc((length * sizeof(unsigned char)) + 6 * sizeof(char));
+    if (imgTM == NULL)
     {
         printf("erreur allocation mémoire \n");
-        return;
+        return NULL;
     }
     imgTM[0] = (char)0x50;
     imgTM[1] = (length >> 24) & 0xFF;
     imgTM[2] = (length >> 16) & 0xFF;
     imgTM[3] = (length >> 8) & 0xFF;
     imgTM[4] = length & 0xFF;
-    imageInTM(imgTM[5], "pict.bmp");
+    imageInTM(&imgTM[5], "pict.bmp");
     return imgTM;
 }
 
-int imageInTM(char *buffer, char *file)
+int imageInTM(char *buffer, char *fileName)
 {
     // char buffer[2000000] = {0};
-    FILE *file = fopen(file, "r");
+    FILE *file = fopen(fileName, "r");
     int len = 0;
     len += fread(buffer + len, 1, 2000000, file);
     return len;
