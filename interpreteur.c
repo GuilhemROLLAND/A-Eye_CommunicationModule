@@ -17,7 +17,7 @@ void interpreteur(mainStruct *main_s, char *bufferMsg)
             bufferMsg = "Process IA running";
             string->length = strlen(bufferMsg);
             string->string = bufferMsg;
-            bufferMsg = stringEncodedTM(string, main_s->chg_mode_struct->mode);
+            bufferMsg = stringEncodedTM(string, 4);
             circular_buf_put(main_s->buf_f_struct->cbuf, bufferMsg);
             main_s->buf_f_struct->new_data_f = true;
             break;
@@ -29,14 +29,14 @@ void interpreteur(mainStruct *main_s, char *bufferMsg)
                 bufferMsg = "Capture";
                 string->length = strlen(bufferMsg);
                 string->string = bufferMsg;
-                bufferMsg  = stringEncodedTM(string, main_s->chg_mode_struct->mode);
+                bufferMsg  = stringEncodedTM(string, 4);
                 circular_buf_put(main_s->buf_f_struct->cbuf, bufferMsg);
                 main_s->buf_f_struct->new_data_f == true;
             }
             bufferMsg = "Mode capture manuelle";
             string->length = strlen(bufferMsg);
             string->string = bufferMsg;
-            bufferMsg = stringEncodedTM(string, main_s->chg_mode_struct->mode);
+            bufferMsg = stringEncodedTM(string, 4);
             circular_buf_put(main_s->buf_f_struct->cbuf, bufferMsg);
             main_s->buf_f_struct->new_data_f = true;
             break;
@@ -46,7 +46,7 @@ void interpreteur(mainStruct *main_s, char *bufferMsg)
             bufferMsg = "Mode video";
             string->length = strlen(bufferMsg);
             string->string = bufferMsg;
-            bufferMsg = stringEncodedTM(string, main_s->chg_mode_struct->mode);
+            bufferMsg = stringEncodedTM(string, 4);
             circular_buf_put(main_s->buf_f_struct->cbuf, bufferMsg);
             main_s->buf_f_struct->new_data_f = true;
             break;
@@ -61,7 +61,7 @@ void interpreteur(mainStruct *main_s, char *bufferMsg)
         bufferMsg = "Starting ...";
         string->length = strlen(bufferMsg);
         string->string = bufferMsg;
-        bufferMsg = stringEncodedTM(string, 3);
+        bufferMsg = stringEncodedTM(string, 4);
         circular_buf_put(main_s->buf_f_struct->cbuf, bufferMsg);
         main_s->buf_f_struct->new_data_f = true;
     }
