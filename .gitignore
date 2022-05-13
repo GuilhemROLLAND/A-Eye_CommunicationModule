@@ -1,1 +1,5 @@
 server.o
+.gitignore
+tcp_server_original
+temp.bmp
+tcp_server

@@ -68,7 +68,7 @@ int main(int argc, char *argv[])
         {
             printf("recv failed\n");
         }
-        else 
+        else
         {
             printf("Client reply : %s\n", client_message);
             strcpy(message, "received");
@@ -79,6 +79,6 @@ int main(int argc, char *argv[])
             }
         }
     }
-    
+
     return 0;
 }
