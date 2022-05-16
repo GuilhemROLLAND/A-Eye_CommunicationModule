@@ -86,7 +86,7 @@ class client:
 
 
 if __name__ == "__main__":
-    pipeClient.writeInPipe("In client main...")
+    pipeClient.writeInPipe("In python client main...")
     parser = argparse.ArgumentParser()
     parser.add_argument("-i", "--ip", type=str,required=True, help="take IpV4 format addr")
     parser.add_argument("-p", "--port", type=int, required=True, help="port of the server")
