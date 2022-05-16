@@ -3,3 +3,4 @@ server.o
 tcp_server_original
 temp.bmp
 tcp_server
+__pycache__
