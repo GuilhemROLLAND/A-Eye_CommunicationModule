@@ -57,11 +57,11 @@ class client:
 
     @staticmethod
     def tcp_client_receive():
-        pipeClient.writeInPipe("In tcp_client_receive")
+        pipeClient.writeInPipe("In thread tcp_client_receive")
         while(1):
             buff = client.recv_msg(client.s)
             if buff:
-                pipeClient.writeInPipe(len(buff))
+                # pipeClient.writeInPipe("received TM, len = " + len(buff))
                 decodageTM.decodeTM(buff)
     
     def recvall(sock, n):
@@ -92,10 +92,12 @@ if __name__ == "__main__":
     parser.add_argument("-p", "--port", type=int, required=True, help="port of the server")
     args = parser.parse_args()
     client.client_init(args.ip, args.port)
+    # Thread receive
     receiver = Thread(target=client.tcp_client_receive)
     receiver.start()
+    # Encodage des TC via pooling sur fichier
     while(1):
         sender = Thread(target=client.tcp_client_send)
         sender.start()
-        sleep(10)
+        sleep(1)
         
