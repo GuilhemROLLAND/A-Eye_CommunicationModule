@@ -20,6 +20,7 @@ from threading import Thread
 from time import sleep
 import encodageTC
 import decodageTM
+import pipeClient
 
 class client:
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -30,11 +31,11 @@ class client:
         server_addr = (ip, port)
         try:
             client.s.connect(server_addr)
-            print("Connected to {:s}".format(repr(server_addr)))
+            pipeClient.writeInPipe("Connected to {:s}".format(repr(server_addr)))
         except AttributeError as ae:
-            print("Error creating the socket: {}".format(ae))
+            pipeClient.writeInPipe("Error creating the socket: {}".format(ae))
         except socket.error as se:
-            print("Exception on socket: {}".format(se))
+            pipeClient.writeInPipe("Exception on socket: {}".format(se))
         return client.s
 
     """
@@ -46,21 +47,21 @@ class client:
     def tcp_client_send():
         msg = encodageTC.encode_tc()
         if(client.s == NULL):
-            print("Socket not init.")
+            pipeClient.writeInPipe("Socket not init.")
             return
         # Connected and send msg, wait for ack
         for tc in msg:
-            # print("send " + tc)
+            # pipeClient.writeInPipe("send " + tc)
             client.s.send(tc.encode())
         # Close connection after ack
 
     @staticmethod
     def tcp_client_receive():
-        print("In tcp_client_receive")
+        pipeClient.writeInPipe("In tcp_client_receive")
         while(1):
             buff = client.recv_msg(client.s)
             if buff:
-                print(len(buff))
+                pipeClient.writeInPipe(len(buff))
                 decodageTM.decodeTM(buff)
     
     def recvall(sock, n):
@@ -85,7 +86,7 @@ class client:
 
 
 if __name__ == "__main__":
-    print("In client main...")
+    pipeClient.writeInPipe("In client main...")
     parser = argparse.ArgumentParser()
     parser.add_argument("-i", "--ip", type=str,required=True, help="take IpV4 format addr")
     parser.add_argument("-p", "--port", type=int, required=True, help="port of the server")
