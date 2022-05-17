@@ -41,7 +41,7 @@ def encode_tc() :
         # TC takePicture 
         if "root['TakePicture']['Valid']" in diff['values_changed']:
             mode = diff['values_changed']["root['TakePicture']['Valid']"]['new_value']
-            if mode == 'True' :
+            if mode == 'true' :
                 tc.append("21")
             else :
                 tc.append("20")
