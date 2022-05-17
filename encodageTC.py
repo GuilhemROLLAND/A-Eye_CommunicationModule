@@ -6,12 +6,21 @@ from deepdiff import DeepDiff
 import socket
 import client
 
+def resetTakePicture():
+    with open('config.json', 'r', encoding='utf-8') as f:
+        json_content = json.load(f)
+        f.close()
+        json_content['TakePicture']['Valid'] = 'false'
+        json.dump(json_content, open('config.json', 'w', encoding='utf-8'), ensure_ascii=False, indent = 4)
+
 def encode_tc() : 
     # Loading json config file
     f1 = open('config.json')
     f2 = open('last_config.json')
     new_config = json.load(f1)
     last_config = json.load(f2)
+    f1.close()
+    f2.close()
 
     # Search for differences in config files
     diff = DeepDiff(last_config,new_config, ignore_string_case = True)
@@ -43,6 +52,7 @@ def encode_tc() :
             mode = diff['values_changed']["root['TakePicture']['Valid']"]['new_value']
             if mode == 'true' :
                 tc.append("21")
+                resetTakePicture()
             else :
                 tc.append("20")
     # for i in range(len(tc)) :
