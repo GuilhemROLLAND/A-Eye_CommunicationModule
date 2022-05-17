@@ -72,7 +72,7 @@ int main()
     struct sockaddr_in server, client;
     char client_message[200] = {0};
     char message[100] = {0};
-    main_s->buf_f_struct->cbuf = circular_buf_init(bufferMsg, 100);
+    main_s->buf_f_struct->cbuf = circular_buf_init(100);
     // Create socket
     socket_desc = SocketCreate();
     if (socket_desc == -1)
@@ -142,15 +142,15 @@ int main()
                 // if new data : send new data
                 if (main_s->buf_f_struct->new_data_f == true)
                 {
-                    int j = circular_buf_get(main_s->buf_f_struct->cbuf, bufferMsg);
-                    if (j == -1)
-                    {
-                        printf("Retrieved failed\n");
-                        return -1;
-                    }
-
+                    bufferMsg = circular_buf_get(main_s->buf_f_struct->cbuf, bufferMsg);
                     // Send some data
-                    if (send(sock, bufferMsg, strlen(bufferMsg), 0) < 0)
+                    printf("Code op : %d\n", bufferMsg[0]);
+                    printf("Length : %d\n", bufferMsg[4]);
+                    printf("Message : ");
+                    for (int i=5; i < bufferMsg[4] + 5; i++)
+                        printf("%c", bufferMsg[i]);
+                    printf("\n");
+                    if (send(sock, bufferMsg, bufferMsg[4] + 5, 0) < 0)
                     {
                         printf("Send failed\n");
                         return -1;

@@ -37,6 +37,8 @@ int decodeTC(mainStruct *main_s, char *msg)
             }
             else 
                 main_s->chg_mode_struct->capture = false;
+                main_s->cmd_struct->change_mode = false;
+                printf("Error : mode capture manuelle non configuré \n");
             return 1;
         // start/stop
         case '3' :

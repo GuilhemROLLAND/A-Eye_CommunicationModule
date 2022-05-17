@@ -19,51 +19,53 @@ STRINGLENGTH *ackTxtFileReading(char *filePath)
     return str;
 }
 
-void codeOpConcat(STRINGLENGTH *inputString, char codeOp)
+char* codeOpConcat(STRINGLENGTH *inputString, char codeOp, char *tm)
 {
-    char *dest;
-    dest = malloc(9 * sizeof(char));
-    if (dest == NULL)
+    char *tmHeader;
+    tmHeader = malloc(5 * sizeof(char));
+    if (tmHeader == NULL)
         printf("erreur allocation mémoire \n");
-    inputString->string[0] = codeOp;
-    inputString->string[1] = 0;
-    inputString->string[2] = 0;
-    inputString->string[3] = 0;
-    inputString->string[4] = inputString->length;
-    
-    return;
+
+    tmHeader[0] = codeOp;
+    tmHeader[1] = 0;
+    tmHeader[2] = 0;
+    tmHeader[3] = 0;
+    tmHeader[4] = inputString->length;
+    memcpy(tm, tmHeader, 5);
+    memcpy(tm+5, inputString->string,inputString->length);
+    return tm;
 }
 
 char *stringEncodedTM(STRINGLENGTH *inputString, unsigned char typeOfAck)
 {
     char codeOp;
-    inputString->string = malloc(inputString->length * sizeof(char));
-    if (inputString->string == NULL)
-        printf("erreur allocation mémoire \n");
+    char *tm;
+    if ((tm = calloc(sizeof(char),inputString->length + 5)) == NULL)
+        printf("erreur allocation memoire \n");
     switch (typeOfAck)
     {
     case 0: // chg_mode_ack
         codeOp = 0x10;
-        codeOpConcat(inputString, codeOp);
+        tm = codeOpConcat(inputString, codeOp, tm);
         break;
     case 1: // takePct ack
         codeOp = 0x20;
-        codeOpConcat(inputString, codeOp);
+        tm = codeOpConcat(inputString, codeOp, tm);
         break;
     case 2: // startStopFlag
         codeOp = 0x30;
-        codeOpConcat(inputString, codeOp);
+        tm = codeOpConcat(inputString, codeOp, tm);
         break;
     case 3: // loadWeights
         codeOp = 0x40;
-        codeOpConcat(inputString, codeOp);
+        tm = codeOpConcat(inputString, codeOp, tm);
         break;
     case 4: // arbitrary string
         codeOp = 0x60;
-        codeOpConcat(inputString, codeOp);
+        tm = codeOpConcat(inputString, codeOp, tm);
         break;
     }
-    return inputString->string;
+    return tm;
 }
 
 char *imgEncodedTM(int *addr, int length)

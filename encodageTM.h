@@ -85,4 +85,6 @@
 
     int imageInTM(char* buffer, char* file);
 
+    char* codeOpConcat(STRINGLENGTH *inputString, char codeOp, char *tm);
+
 #endif

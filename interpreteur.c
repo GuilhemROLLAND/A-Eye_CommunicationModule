@@ -4,6 +4,7 @@
 int interpreteur(mainStruct *main_s)
 {
     STRINGLENGTH *string;
+    int cnt = 0;
     char *bufferMsg;
     if ((bufferMsg = malloc(100*sizeof(char))) == NULL)
     {
@@ -17,6 +18,7 @@ int interpreteur(mainStruct *main_s)
     }  
     if (main_s->cmd_struct->change_mode == true)
     {
+        cnt++;
         switch (main_s->chg_mode_struct->mode)
         {
         case 0:
@@ -24,6 +26,8 @@ int interpreteur(mainStruct *main_s)
             /* processIA(); */
             bufferMsg = "Process IA running";
             string->length = strlen(bufferMsg);
+            if ((string->string = malloc(sizeof(char)*string->length)) == NULL)
+                printf("erreur allocation memoire \n");
             string->string = bufferMsg;
             bufferMsg = stringEncodedTM(string, 4);
             circular_buf_put(main_s->buf_f_struct->cbuf, bufferMsg);
@@ -36,6 +40,8 @@ int interpreteur(mainStruct *main_s)
                 // déclencher une capture manuelle
                 bufferMsg = "Capture"; 
                 string->length = strlen(bufferMsg);
+                if ((string->string = malloc(sizeof(char)*string->length)) == NULL)
+                    printf("erreur allocation memoire \n");
                 string->string = bufferMsg;
                 bufferMsg  = stringEncodedTM(string, 4);
                 circular_buf_put(main_s->buf_f_struct->cbuf, bufferMsg);
@@ -43,6 +49,8 @@ int interpreteur(mainStruct *main_s)
             }
             bufferMsg = "Mode capture manuelle";
             string->length = strlen(bufferMsg);
+            if ((string->string = malloc(sizeof(char)*string->length)) == NULL)
+                printf("erreur allocation memoire \n");
             string->string = bufferMsg;
             bufferMsg = stringEncodedTM(string, 4);
             circular_buf_put(main_s->buf_f_struct->cbuf, bufferMsg);
@@ -53,6 +61,8 @@ int interpreteur(mainStruct *main_s)
             // mode vidéo, bonus
             bufferMsg = "Mode video";
             string->length = strlen(bufferMsg);
+            if ((string->string = malloc(sizeof(char)*string->length)) == NULL)
+                printf("erreur allocation memoire \n");
             string->string = bufferMsg;
             bufferMsg = stringEncodedTM(string, 4);
             circular_buf_put(main_s->buf_f_struct->cbuf, bufferMsg);
@@ -70,23 +80,33 @@ int interpreteur(mainStruct *main_s)
     else
     {
         // TO DO : stop le système
-        bufferMsg = "Closing ...";
-        string->length = strlen(bufferMsg);
-        string->string = bufferMsg;
-        bufferMsg = stringEncodedTM(string, 3);
-        circular_buf_put(main_s->buf_f_struct->cbuf, bufferMsg);
-        main_s->buf_f_struct->new_data_f = true;
+        // bufferMsg = "Closing ...";
+        // string->length = strlen(bufferMsg);
+        // if ((string->string = malloc(sizeof(char)*string->length)) == NULL)
+        //         printf("erreur allocation memoire \n");
+        // string->string = bufferMsg;
+        // bufferMsg = stringEncodedTM(string, 4);
+        // circular_buf_put(main_s->buf_f_struct->cbuf, bufferMsg);
+        // main_s->buf_f_struct->new_data_f = true;
     }
     if (main_s->cmd_struct->weights_update == true)
     {
+        cnt++;
         // TO DO :
         // charger arch et weights dans IA en c
         // bonus
         bufferMsg = "Chargement des poids";
         string->length = strlen(bufferMsg);
+        if ((string->string = malloc(sizeof(char)*string->length)) == NULL)
+                printf("erreur allocation memoire \n");
         string->string = bufferMsg;
         bufferMsg = stringEncodedTM(string, 4);
         circular_buf_put(main_s->buf_f_struct->cbuf, bufferMsg);
         main_s->buf_f_struct->new_data_f = true;
+    }
+    if(cnt == 0)
+    {
+        printf("No changes in config\n");
+        main_s->buf_f_struct->new_data_f = false;
     }
 }

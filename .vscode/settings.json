@@ -3,6 +3,7 @@
         "encodagetm.h": "c",
         "stdio.h": "c",
         "circular_buffer.h": "c",
-        "stdlib.h": "c"
+        "stdlib.h": "c",
+        "interpreteur.h": "c"
     }
 }
