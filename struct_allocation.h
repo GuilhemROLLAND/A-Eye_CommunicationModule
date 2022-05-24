@@ -48,6 +48,8 @@ typedef struct mainStruct
     weight_upd *weight_struct;
     buf_f *buf_f_struct;
     img *img_s;
+    char *ack;
+    int fifo;
 } mainStruct;
 
 
