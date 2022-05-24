@@ -107,6 +107,6 @@ int imageInTM(char *buffer, char *fileName)
     // char buffer[2000000] = {0};
     FILE *file = fopen(fileName, "r");
     int len = 0;
-    len += fread(buffer + len, 1, 2000000, file);
+    len += fread(buffer + len, 1, 921656, file);
     return len;
 }

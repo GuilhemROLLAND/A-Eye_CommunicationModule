@@ -3,7 +3,10 @@
 #include<sys/socket.h>
 #include<arpa/inet.h>
 #include<unistd.h>
-#include <pthread.h>
+#include<sys/stat.h>
+#include<sys/types.h>
+#include<pthread.h>
+#include<fcntl.h>
 #include "decodageTC.h"
 #include "encodageTM.h"
 #include "struct_allocation.h"
@@ -11,6 +14,12 @@
 
 #ifndef _TCPSERVER_H
 #define _TCPSERVER_H
+
+typedef struct socket_thr_s 
+{
+    int sock;
+    int socket_desc;
+} socket_thr_s;
 
 /**
  * @brief Create a tcp socket 

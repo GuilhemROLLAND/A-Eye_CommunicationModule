@@ -51,11 +51,10 @@ char *interpreteur(mainStruct *main_s)
     }
     if (main_s->cmd_struct->change_mode == true)
     {
-        cnt++;
         switch (main_s->chg_mode_struct->mode)
         {
         case 0:
-            // system("pkill --signal SIGUSR1 shipsnet")
+            system("bash ../demo.sh");
             bufferMsg = "Process IA running";
             string->length = strlen(bufferMsg);
             if ((string->string = malloc(sizeof(char) * string->length)) == NULL)
@@ -107,7 +106,6 @@ char *interpreteur(mainStruct *main_s)
     }
     if (main_s->cmd_struct->weights_update == true)
     {
-        cnt++;
         // TO DO :
         // charger arch et weights dans IA en c
         // bonus
