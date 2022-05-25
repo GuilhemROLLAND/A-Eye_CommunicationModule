@@ -1,3 +1,14 @@
+/**
+ * @file encodageTM.c
+ * @author Thomas du Boisrouvray (thomas.duboisrouvray@elsys-design.com)
+ * @brief This file implements differents functions for TM encoding
+ * @version 0.1
+ * @date 2022-05-25
+ * 
+ * @copyright Copyright (c) 2022
+ * 
+ */
+
 #include "encodageTM.h"
 
 STRINGLENGTH *ackTxtFileReading(char *filePath)
@@ -81,7 +92,7 @@ char *imgEncodedTM(int length)
     imgTM[2] = (length >> 16) & 0xFF;
     imgTM[3] = (length >> 8) & 0xFF;
     imgTM[4] = length & 0xFF;
-    imageInTM(&imgTM[5], "temp.bmp");
+    imageInTM(&imgTM[5], "../temp.bmp");
     return imgTM;
 }
 
@@ -98,7 +109,7 @@ char *captureManuelle(int length)
     imgTM[2] = (length >> 16) & 0xFF;
     imgTM[3] = (length >> 8) & 0xFF;
     imgTM[4] = length & 0xFF;
-    imageInTM(&imgTM[5], "temp.bmp");
+    imageInTM(&imgTM[5], "../temp.bmp");
     return imgTM;
 }
 

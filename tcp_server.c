@@ -1,14 +1,21 @@
+/**
+ * @file tcp_server.c
+ * @author Thomas du Boisrouvray (thomas.duboisrouvray@elsys-design.com)
+ * @brief This file implements a tcp server on port 64000 with a thread for sending and a thread for receiving 
+ * @version 0.1
+ * @date 2022-05-25
+ * 
+ * @copyright Copyright (c) 2022
+ * 
+ */
+
 #include "tcp_server.h"
 
-
 #define IMG_LENGTH 921656
+#define PORT 64000
 struct mainStruct *main_s;
 
-/**
- * @brief Create a tcp socket
- *
- * @return short
- */
+
 short SocketCreate(void)
 {
     short hSocket;
@@ -159,7 +166,7 @@ void *thread_pred(void *arg)
 int BindCreatedSocket(int hSocket)
 {
     int iRetval = -1;
-    int ClientPort = 64000;
+    int ClientPort = PORT;
     struct sockaddr_in remote = {0};
     /* Internet address family */
     remote.sin_family = AF_INET;

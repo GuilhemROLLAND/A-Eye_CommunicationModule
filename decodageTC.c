@@ -1,8 +1,19 @@
+/**
+ * @file decodageTC.c
+ * @author Thomas du Boisrouvray (thomas.duboisrouvray@elsys-design.com)
+ * @brief This file implements the decodeTC function
+ * @version 0.1
+ * @date 2022-05-25
+ * 
+ * @copyright Copyright (c) 2022
+ * 
+ */
+
 #include <stdio.h> 
 #include <stdint.h>
 #include <stdbool.h>
 #include <stdio.h>
-
+#include "decodageTC.h"
 #include "interpreteur.h"
 
 int decodeTC(mainStruct *main_s, char *msg) 
