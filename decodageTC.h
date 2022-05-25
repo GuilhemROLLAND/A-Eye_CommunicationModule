@@ -1,3 +1,13 @@
+/**
+ * @file decodageTC.h
+ * @author Thomas du Boisrouvray (thomas.duboisrouvray@elsys-design.com)
+ * @brief Header of decodageTC.h
+ * @version 0.1
+ * @date 2022-05-25
+ * 
+ * @copyright Copyright (c) 2022
+ * 
+ */
 #include "interpreteur.h"
 
 #ifndef _DECODAGETC_H

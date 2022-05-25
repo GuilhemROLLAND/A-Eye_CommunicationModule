@@ -1,3 +1,14 @@
+/**
+ * @file interpreteur.c
+ * @author Thomas du Boisrouvray (thomas.duboisrouvray@elsys-design.com)
+ * @brief This file implements the interpreteur function.
+ * @version 0.1
+ * @date 2022-05-25
+ * 
+ * @copyright Copyright (c) 2022
+ * 
+ */
+
 #include "interpreteur.h"
 #include "encodageTM.h"
 

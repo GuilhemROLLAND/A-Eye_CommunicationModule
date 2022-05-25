@@ -1,3 +1,14 @@
+/**
+ * @file tcp_server.h
+ * @author Thomas du Boisrouvray (thomas.duboisrouvray@elsys-design.com)
+ * @brief Header for tcp_server.c
+ * @version 0.1
+ * @date 2022-05-25
+ * 
+ * @copyright Copyright (c) 2022
+ * 
+ */
+
 #include<stdio.h>
 #include<string.h>
 #include<sys/socket.h>
@@ -35,5 +46,30 @@ short SocketCreate(void);
  * @return int 
  */
 int BindCreatedSocket(int hSocket);
+
+/**
+ * @brief Thread for tcp receive. Constantly receive and decode any incoming TC.
+ * 
+ * @param arg socket informations passed by pthread_create()
+ * @return void* 
+ */
+void *thread_rcv(void *arg);
+
+/**
+ * @brief Thread for tcp sending. Polling on flags to send whenever there is a new ack, an image is processed or manual capture.
+ * 
+ * @param arg socket informations passed by pthread_create()
+ * @return void* 
+ */
+void *thread_send(void *arg);
+
+
+/**
+ * @brief Thread for fifo polling. Update the processed image flag whenever a positive prediction is returned.
+ * 
+ * @param arg socket informations passed by pthread_create()
+ * @return void* 
+ */
+void *thread_pred(void *arg);
 
 #endif
